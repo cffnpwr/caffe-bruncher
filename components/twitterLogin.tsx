@@ -1,5 +1,5 @@
 import Router from 'next/router';
-import useSWR from 'swr';
+import useSWR, { KeyedMutator } from 'swr';
 
 const TwitterLogin = () => {
   const { data, error, mutate } = useLoginStatus();
@@ -7,20 +7,20 @@ const TwitterLogin = () => {
 
   return (
     <>
-      <button onClick={() => login(isLogin)}>
+      <button onClick={() => login(isLogin, mutate)}>
         {isLogin ? 'Logout Twitter' : 'Login Twitter'}
       </button>
     </>
   );
 };
 
-const login = async (isLogin: boolean) => {
+const login = async (isLogin: boolean, mutate: KeyedMutator<string>) => {
   if (isLogin) {
     await fetch('http://localhost:3000/api/twitter/auth', {
       method: 'DELETE',
     });
 
-    Router.push('/');
+    mutate();
   } else {
     const res = await fetch('http://localhost:3000/api/twitter/auth', {
       method: 'GET',
@@ -40,8 +40,8 @@ const useLoginStatus = () => {
     '/api/twitter/login_status',
     fetcher,
     {
-      shouldRetryOnError: false,
       refreshInterval: 1000,
+      shouldRetryOnError: false,
     }
   );
 
