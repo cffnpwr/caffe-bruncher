@@ -13,7 +13,7 @@ const Page = () => {
         router.push('/');
       }
 
-      fetch('http://localhost:3000/api/twitter/auth', {
+      fetch('/api/twitter/auth', {
         method: 'POST',
         body: JSON.stringify({
           oauth_token: oauthToken,

@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { destroyCookie, setCookie } from 'nookies';
-import { Twitter } from '../../../lib/twitter';
+import { Twitter } from '@/lib/twitter';
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   const method = req.method;

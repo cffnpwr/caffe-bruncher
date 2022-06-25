@@ -1,8 +1,6 @@
-import type { GetServerSideProps } from 'next';
 import Head from 'next/head';
-import nookies from 'nookies';
-import TwitterLogin from '../components/twitterLogin';
-import styles from '../styles/Home.module.css';
+import TwitterLogin from '@/components/twitterLogin';
+import styles from '@/styles/Home.module.css';
 
 const Home = () => {
   return (

@@ -16,13 +16,13 @@ const TwitterLogin = () => {
 
 const login = async (isLogin: boolean, mutate: KeyedMutator<string>) => {
   if (isLogin) {
-    await fetch('http://localhost:3000/api/twitter/auth', {
+    await fetch('/api/twitter/auth', {
       method: 'DELETE',
     });
 
     mutate();
   } else {
-    const res = await fetch('http://localhost:3000/api/twitter/auth', {
+    const res = await fetch('/api/twitter/auth', {
       method: 'GET',
     });
     const oauthToken = (await res.json())['oauth_token'] || '';
