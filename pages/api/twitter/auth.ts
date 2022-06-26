@@ -4,7 +4,7 @@ import { Twitter } from '@/lib/twitter';
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   const method = req.method;
-  const twitter = new Twitter(req);
+  const twitter = await Twitter.init(req);
 
   if (method === 'GET') {
     const oauthToken = await twitter.getOAuthToken();

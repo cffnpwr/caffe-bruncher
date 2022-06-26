@@ -3,7 +3,7 @@ import { Twitter } from '@/lib/twitter';
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   if (req.method === 'GET') {
-    const twitter = new Twitter(req);
+    const twitter = await Twitter.init(req);
     const isValid = await twitter.validateToken();
     const status = isValid ? 200 : 401;
 

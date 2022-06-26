@@ -1,7 +1,8 @@
+import { NextPage } from 'next';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
 
-const Page = () => {
+const Page: NextPage = () => {
   const router = useRouter();
   const query = router.query;
 

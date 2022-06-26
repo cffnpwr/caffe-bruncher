@@ -9,23 +9,36 @@ export class Twitter {
   private cs = process.env.CS || '';
   private callbackUrl = process.env.TW_OAUTH_CALLBACK || '';
   //  accesstoken
-  private token: AccessToken | undefined;
+  private token: TwitterAccessToken | undefined;
   //  context
   private ctx: NextApiRequest;
 
   constructor(ctx: NextApiRequest) {
     //  set context
     this.ctx = ctx;
-    //  get access token
-    this.token = this.getToken(ctx);
   }
 
-  private getToken(ctx: NextApiRequest): AccessToken | undefined {
+  public static async init(ctx: NextApiRequest): Promise<Twitter> {
+    const twitter = new Twitter(ctx);
+
+    //  get access token
+    twitter.token = await twitter.getToken(ctx);
+
+    return twitter;
+  }
+
+  private async getToken(
+    ctx: NextApiRequest
+  ): Promise<TwitterAccessToken | undefined> {
     const cookies = parseCookies({ req: ctx });
     const tokens = JSON.parse(cookies['twitterToken'] || '{}');
 
     if (!tokens.accessToken || !tokens.accessSecret || !tokens.accountId)
       return undefined;
+
+    this.token = tokens;
+    const isValid = await this.validateToken();
+    if (!isValid) return undefined;
 
     return {
       accountId: tokens.accountId,
@@ -113,6 +126,9 @@ export class Twitter {
       headers: oauthHeader,
     });
     if (res.status !== 200) return false;
+
+    const accountId = (await res.json()).data.id;
+    if (accountId !== this.token.accountId) return false;
 
     return true;
   }
