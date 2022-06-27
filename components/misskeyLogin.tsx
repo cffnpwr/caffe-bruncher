@@ -1,11 +1,18 @@
+import { mkIsLoginContext } from '@/pages';
 import Router from 'next/router';
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import useSWR, { KeyedMutator } from 'swr';
 
 const MisskeyLogin = () => {
   const [instanceName, setInstanceName] = useState('');
-  const { data, error, mutate } = useLoginStatus();
-  const isLogin = data ? data.status === 200 : false;
+  const { data, isValidating, mutate } = useLoginStatus();
+  const isLoginContext = useContext(mkIsLoginContext);
+  const isLogin = isLoginContext.isLogin;
+
+  useEffect(() => {
+    isLoginContext.setIsLogin(data ? data.status === 200 : false);
+  }, [isLoginContext.setIsLogin, data]);
+
   const onChangeInstanceName = (
     event: React.ChangeEvent<HTMLInputElement>
   ): void => {
@@ -22,9 +29,13 @@ const MisskeyLogin = () => {
           value={instanceName}
           onChange={onChangeInstanceName}
           placeholder='Instance Name'
+          disabled={isValidating}
         />
       )}
-      <button onClick={() => login(isLogin, instanceName, mutate)}>
+      <button
+        onClick={() => login(isLogin, instanceName, mutate)}
+        disabled={isValidating}
+      >
         {(isLogin ? 'Logout' : 'Login') + ' Misskey'}
       </button>
     </>
@@ -43,6 +54,7 @@ const login = async (
 
     mutate();
   } else {
+    if (!instanceName) return;
     const res = await fetch(`/api/misskey/auth?instance=${instanceName}`, {
       method: 'GET',
     });

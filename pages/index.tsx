@@ -2,8 +2,22 @@ import Head from 'next/head';
 import TwitterLogin from '@/components/twitterLogin';
 import MisskeyLogin from '@/components/misskeyLogin';
 import styles from '@/styles/Home.module.css';
+import { createContext, useState } from 'react';
+
+export const twIsLoginContext = createContext<IsLoginContextProps>({
+  isLogin: false,
+  setIsLogin: () => {},
+});
+export const mkIsLoginContext = createContext<IsLoginContextProps>({
+  isLogin: false,
+  setIsLogin: () => {},
+});
 
 const Home = () => {
+  const [twIsLogin, setTwIsLogin] = useState<boolean>(false);
+  const [mkIsLogin, setMkIsLogin] = useState<boolean>(false);
+  const canPosting = twIsLogin && mkIsLogin;
+
   return (
     <div className={styles.container}>
       <Head>
@@ -16,8 +30,29 @@ const Home = () => {
         <h1 className={styles.title}>CaffeBruncher</h1>
 
         <div className={styles.login}>
-          <TwitterLogin />
-          <MisskeyLogin />
+          <twIsLoginContext.Provider
+            value={{
+              isLogin: twIsLogin,
+              setIsLogin: setTwIsLogin,
+            }}
+          >
+            <TwitterLogin />
+          </twIsLoginContext.Provider>
+
+          <mkIsLoginContext.Provider
+            value={{
+              isLogin: mkIsLogin,
+              setIsLogin: setMkIsLogin,
+            }}
+          >
+            <MisskeyLogin />
+          </mkIsLoginContext.Provider>
+        </div>
+        <div>
+          <textarea name='' id='' disabled={!canPosting}></textarea>
+          <button type='submit' disabled={!canPosting}>
+            Send
+          </button>
         </div>
       </main>
     </div>

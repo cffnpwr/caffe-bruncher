@@ -1,12 +1,18 @@
+import { twIsLoginContext } from '@/pages';
 import Router from 'next/router';
+import { useContext, useEffect } from 'react';
 import useSWR, { KeyedMutator } from 'swr';
 
 const TwitterLogin = () => {
-  const { data, error, mutate } = useLoginStatus();
-  const isLogin = data === '200';
+  const { data, isValidating, mutate } = useLoginStatus();
+  const isLoginContext = useContext(twIsLoginContext);
+  const isLogin = isLoginContext.isLogin;
 
+  useEffect(() => {
+    isLoginContext.setIsLogin(data ? data === '200' : false);
+  }, [isLoginContext.setIsLogin, data]);
   return (
-    <button onClick={() => login(isLogin, mutate)}>
+    <button onClick={() => login(isLogin, mutate)} disabled={isValidating}>
       {isLogin ? 'Logout Twitter' : 'Login Twitter'}
     </button>
   );

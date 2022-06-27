@@ -1,4 +1,4 @@
-interface IsLogin {
-  tw: boolean;
-  mk: boolean;
+interface IsLoginContextProps {
+  isLogin: boolean;
+  setIsLogin: (isLogin: boolean) => void;
 }
