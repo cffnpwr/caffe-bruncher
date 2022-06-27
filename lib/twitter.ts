@@ -22,15 +22,13 @@ export class Twitter {
     const twitter = new Twitter(ctx);
 
     //  get access token
-    twitter.token = await twitter.getToken(ctx);
+    twitter.token = await twitter.getToken();
 
     return twitter;
   }
 
-  private async getToken(
-    ctx: NextApiRequest
-  ): Promise<TwitterAccessToken | undefined> {
-    const cookies = parseCookies({ req: ctx });
+  private async getToken(): Promise<TwitterAccessToken | undefined> {
+    const cookies = parseCookies({ req: this.ctx });
     const tokens = JSON.parse(cookies['twitterToken'] || '{}');
 
     if (!tokens.accessToken || !tokens.accessSecret || !tokens.accountId)
@@ -40,11 +38,7 @@ export class Twitter {
     const isValid = await this.validateToken();
     if (!isValid) return undefined;
 
-    return {
-      accountId: tokens.accountId,
-      accessToken: tokens.accessToken,
-      accessSecret: tokens.accessSecret,
-    };
+    return this.token;
   }
 
   /**
@@ -100,8 +94,6 @@ export class Twitter {
           break;
       }
     }
-
-    this.ctx.cookies;
 
     return tokens;
   }

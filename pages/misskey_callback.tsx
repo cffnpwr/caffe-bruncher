@@ -8,15 +8,13 @@ const Page: NextPage = () => {
 
   useEffect(() => {
     if (router.isReady) {
-      const oauthToken = router.query.oauth_token;
-      const oauthVerifier = router.query.oauth_verifier;
-      if (!oauthToken || !oauthVerifier) router.push('/');
+      const token = router.query.token;
+      if (!token) router.push('/');
 
-      fetch('/api/twitter/auth', {
+      fetch('/api/misskey/auth', {
         method: 'POST',
         body: JSON.stringify({
-          oauth_token: oauthToken,
-          oauth_verifier: oauthVerifier,
+          token: token,
         }),
       })
         .then((res) => {

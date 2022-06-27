@@ -6,11 +6,9 @@ const TwitterLogin = () => {
   const isLogin = data === '200';
 
   return (
-    <>
-      <button onClick={() => login(isLogin, mutate)}>
-        {isLogin ? 'Logout Twitter' : 'Login Twitter'}
-      </button>
-    </>
+    <button onClick={() => login(isLogin, mutate)}>
+      {isLogin ? 'Logout Twitter' : 'Login Twitter'}
+    </button>
   );
 };
 
@@ -40,7 +38,7 @@ const useLoginStatus = () => {
     '/api/twitter/login_status',
     fetcher,
     {
-      refreshInterval: 1000,
+      refreshInterval: 5 * 60 * 1000,
       shouldRetryOnError: false,
     }
   );

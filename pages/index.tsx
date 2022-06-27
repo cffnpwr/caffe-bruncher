@@ -1,5 +1,6 @@
 import Head from 'next/head';
 import TwitterLogin from '@/components/twitterLogin';
+import MisskeyLogin from '@/components/misskeyLogin';
 import styles from '@/styles/Home.module.css';
 
 const Home = () => {
@@ -14,7 +15,10 @@ const Home = () => {
       <main className={styles.main}>
         <h1 className={styles.title}>CaffeBruncher</h1>
 
-        <TwitterLogin />
+        <div className={styles.login}>
+          <TwitterLogin />
+          <MisskeyLogin />
+        </div>
       </main>
     </div>
   );
