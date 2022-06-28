@@ -125,6 +125,31 @@ export class Twitter {
     return true;
   }
 
+  /**
+   * postContent
+   */
+  public async postContent(content: string) {
+    if (!content) return false;
+
+    const target = 'https://api.twitter.com/2/tweets';
+    const oauthHeader = this.getOAuthHeader(target, 'POST');
+
+    const res = await fetch(target, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: oauthHeader.Authorization,
+      },
+      body: JSON.stringify({
+        text: content,
+      }),
+    });
+    console.log(res.status);
+    if (res.status !== 201) return false;
+
+    return true;
+  }
+
   private getOAuthHeader(url: string, method: string) {
     const oauth = new OAuth({
       consumer: {

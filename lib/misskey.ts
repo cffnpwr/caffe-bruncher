@@ -125,4 +125,34 @@ export class Misskey {
 
     return true;
   }
+
+  /**
+   * postContent
+   */
+  public async postContent(content: string) {
+    if (
+      !content ||
+      !this.instance ||
+      !this.token ||
+      !this.token.accountId ||
+      !this.token.accessToken
+    )
+      return false;
+
+    const target = `https://${this.instance}/api/notes/create`;
+
+    const res = await fetch(target, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        i: this.token.accessToken,
+        text: content,
+      }),
+    });
+    if (res.status !== 200) return false;
+
+    return true;
+  }
 }

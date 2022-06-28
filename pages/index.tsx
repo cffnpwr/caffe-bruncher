@@ -2,7 +2,7 @@ import Head from 'next/head';
 import TwitterLogin from '@/components/twitterLogin';
 import MisskeyLogin from '@/components/misskeyLogin';
 import styles from '@/styles/Home.module.css';
-import { createContext, useState } from 'react';
+import React, { createContext, useState } from 'react';
 
 export const twIsLoginContext = createContext<IsLoginContextProps>({
   isLogin: false,
@@ -16,7 +16,34 @@ export const mkIsLoginContext = createContext<IsLoginContextProps>({
 const Home = () => {
   const [twIsLogin, setTwIsLogin] = useState<boolean>(false);
   const [mkIsLogin, setMkIsLogin] = useState<boolean>(false);
+  const [postingContent, setPostingContent] = useState<string>('');
   const canPosting = twIsLogin && mkIsLogin;
+
+  const onChangePostingContent = (
+    event: React.ChangeEvent<HTMLTextAreaElement>
+  ): void => {
+    setPostingContent(event.target.value);
+  };
+
+  const login = async (postingContent: string, canPosting: boolean) => {
+    if (!canPosting) return;
+
+    const res = await fetch('/api/post', {
+      method: 'POST',
+      body: JSON.stringify({
+        content: postingContent,
+      }),
+    });
+    if (res.status !== 200) {
+      console.error(`failed to post. status: ${res.status}`);
+
+      return;
+    }
+
+    setPostingContent('');
+
+    return;
+  };
 
   return (
     <div className={styles.container}>
@@ -49,8 +76,18 @@ const Home = () => {
           </mkIsLoginContext.Provider>
         </div>
         <div>
-          <textarea name='' id='' disabled={!canPosting}></textarea>
-          <button type='submit' disabled={!canPosting}>
+          <textarea
+            value={postingContent}
+            disabled={!canPosting}
+            onChange={onChangePostingContent}
+          ></textarea>
+          <button
+            type='submit'
+            disabled={!canPosting}
+            onClick={() => {
+              login(postingContent, canPosting);
+            }}
+          >
             Send
           </button>
         </div>
