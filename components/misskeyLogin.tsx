@@ -1,6 +1,5 @@
-import { mkIconContext, mkIsLoginContext } from '@/pages';
 import Router from 'next/router';
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useRecoilState } from 'recoil';
 import { KeyedMutator } from 'swr';
 import { mkValidationState } from './stores/login';
@@ -15,7 +14,7 @@ const MisskeyLogin = () => {
 
   useEffect(() => {
     setVState({
-      isLogin: data ? data.status === 200 : false,
+      isLogin: data ? data.status === 200 || data.status === 100 : false,
       data: data ? data.data || '' : '',
     });
   }, [setVState, data]);
@@ -65,6 +64,7 @@ const login = async (
     const res = await fetch(`/api/misskey/auth?instance=${instanceName}`, {
       method: 'GET',
     });
+    if (res.status !== 200) return;
     const url = (await res.json())['auth_url'] || '';
     if (!url) return;
 

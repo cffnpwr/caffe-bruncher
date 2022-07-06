@@ -19,12 +19,23 @@ export class Twitter {
   }
 
   private getToken(): TwitterAccessToken | undefined {
-    const tokens = JSON.parse(this.cookies['twitterToken'] || '{}');
+    try {
+      const tokens = JSON.parse(this.cookies['twitterToken'] || '{}');
 
-    if (!tokens.accessToken || !tokens.accessSecret || !tokens.accountId)
+      if (!tokens.accessToken || !tokens.accessSecret || !tokens.accountId)
+        return undefined;
+
+      return tokens;
+    } catch (error) {
       return undefined;
+    }
+  }
 
-    return tokens;
+  /**
+   * hasToken
+   */
+  public hasToken(): boolean {
+    return this.token ? true : false;
   }
 
   /**
@@ -89,7 +100,7 @@ export class Twitter {
    */
   public async validateToken() {
     const result: ValidateResult = {
-      status: 400,
+      status: 401,
       data: {},
     };
 

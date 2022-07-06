@@ -1,6 +1,3 @@
-import { NextApiRequest } from 'next';
-import { parseCookies } from 'nookies';
-
 export class Misskey {
   //  app secret
   private appSecret: string = process.env.APP_SECRET || '';
@@ -25,11 +22,15 @@ export class Misskey {
   }
 
   private getToken(): MisskeyAccessToken | undefined {
-    const tokens = JSON.parse(this.cookies['misskeyToken'] || '{}');
+    try {
+      const tokens = JSON.parse(this.cookies['misskeyToken'] || '{}');
 
-    if (!tokens.accessToken || !tokens.accountId) return undefined;
+      if (!tokens.accessToken || !tokens.accountId) return undefined;
 
-    return tokens;
+      return tokens;
+    } catch (error) {
+      return undefined;
+    }
   }
 
   /**
@@ -40,21 +41,32 @@ export class Misskey {
   }
 
   /**
+   * hasToken
+   */
+  public hasToken(): boolean {
+    return this.token ? true : false;
+  }
+
+  /**
    * getAuthUrl
    */
   public async getAuthUrl() {
     const target = `https://${this.instance}/api/auth/session/generate`;
 
-    const res = await fetch(target, {
-      method: 'POST',
-      body: JSON.stringify({
-        appSecret: this.appSecret,
-      }),
-    });
-    if (res.status !== 200) return '';
-    const url: string = (await res.json())['url'] || '';
+    try {
+      const res = await fetch(target, {
+        method: 'POST',
+        body: JSON.stringify({
+          appSecret: this.appSecret,
+        }),
+      });
+      if (res.status !== 200) return '';
+      const url: string = (await res.json())['url'] || '';
 
-    return url;
+      return url;
+    } catch (error) {
+      return '';
+    }
   }
 
   /**
@@ -84,7 +96,7 @@ export class Misskey {
    */
   public async validateToken() {
     const result: ValidateResult = {
-      status: 400,
+      status: 401,
       data: {},
     };
 

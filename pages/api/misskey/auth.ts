@@ -16,7 +16,11 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     }
 
     const authUrl = await misskey.getAuthUrl();
-    if (!authUrl) res.status(400).send('');
+    if (!authUrl) {
+      res.status(400).send('');
+
+      return;
+    }
 
     setCookie({ res: res }, 'mkInstance', reqInstance, {
       httpOnly: true,

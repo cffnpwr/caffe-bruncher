@@ -13,7 +13,7 @@ const TwitterLogin = () => {
 
   useEffect(() => {
     setVState({
-      isLogin: data ? data.status === 200 : false,
+      isLogin: data ? data.status === 200 || data.status === 100 : false,
       data: data ? data.data || '' : '',
     });
   }, [setVState, data]);
