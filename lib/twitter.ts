@@ -1,7 +1,5 @@
 import OAuth from 'oauth-1.0a';
 import crypto from 'node:crypto';
-import { parseCookies } from 'nookies';
-import { NextApiRequest } from 'next';
 
 export class Twitter {
   //  consumer keys
@@ -10,35 +8,23 @@ export class Twitter {
   private callbackUrl = process.env.TW_OAUTH_CALLBACK || '';
   //  accesstoken
   private token: TwitterAccessToken | undefined;
-  //  context
-  private ctx: NextApiRequest;
+  //  cookies
+  private cookies: { [key: string]: string };
 
-  constructor(ctx: NextApiRequest) {
-    //  set context
-    this.ctx = ctx;
+  constructor(cookies: { [key: string]: string }) {
+    //  set cookie
+    this.cookies = cookies;
+    //  set token
+    this.token = this.getToken();
   }
 
-  public static async init(ctx: NextApiRequest): Promise<Twitter> {
-    const twitter = new Twitter(ctx);
-
-    //  get access token
-    twitter.token = await twitter.getToken();
-
-    return twitter;
-  }
-
-  private async getToken(): Promise<TwitterAccessToken | undefined> {
-    const cookies = parseCookies({ req: this.ctx });
-    const tokens = JSON.parse(cookies['twitterToken'] || '{}');
+  private getToken(): TwitterAccessToken | undefined {
+    const tokens = JSON.parse(this.cookies['twitterToken'] || '{}');
 
     if (!tokens.accessToken || !tokens.accessSecret || !tokens.accountId)
       return undefined;
 
-    this.token = tokens;
-    const isValid = await this.validateToken();
-    if (!isValid) return undefined;
-
-    return this.token;
+    return tokens;
   }
 
   /**
@@ -102,27 +88,41 @@ export class Twitter {
    * validateToken
    */
   public async validateToken() {
+    const result: ValidateResult = {
+      status: 400,
+      data: {},
+    };
+
     if (
       !this.token ||
       !this.token.accessSecret ||
       !this.token.accessToken ||
       !this.token.accountId
     )
-      return false;
+      return result;
 
-    const target = 'https://api.twitter.com/2/users/me';
+    const target =
+      'https://api.twitter.com/2/users/me?user.fields=profile_image_url';
     const oauthHeader = this.getOAuthHeader(target, 'GET');
 
     const res = await fetch(target, {
       method: 'GET',
       headers: oauthHeader,
     });
-    if (res.status !== 200) return false;
+    const data = (await res.json()).data;
+    if (res.status !== 200) {
+      result.status = res.status;
+      result.data = data;
 
-    const accountId = (await res.json()).data.id;
-    if (accountId !== this.token.accountId) return false;
+      return result;
+    }
 
-    return true;
+    const accountId = data.id;
+    if (accountId !== this.token.accountId) return result;
+
+    result.status = 200;
+    result.data = data;
+    return result;
   }
 
   /**
@@ -144,7 +144,6 @@ export class Twitter {
         text: content,
       }),
     });
-    console.log(res.status);
     if (res.status !== 201) return false;
 
     return true;

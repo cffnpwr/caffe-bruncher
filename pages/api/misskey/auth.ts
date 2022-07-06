@@ -1,11 +1,12 @@
 import { Misskey } from '@/lib/misskey';
 import { NextApiRequest, NextApiResponse } from 'next';
-import { destroyCookie, setCookie } from 'nookies';
+import { destroyCookie, parseCookies, setCookie } from 'nookies';
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   const method = req.method;
+  const cookies = parseCookies({ req: req });
   const reqInstance = (req.query.instance as string) || '';
-  const misskey = await Misskey.init(req, reqInstance);
+  const misskey = new Misskey(cookies, reqInstance);
 
   if (method === 'GET') {
     if (!reqInstance) {
@@ -46,6 +47,9 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     res.status(200).send('');
   } else if (method === 'DELETE') {
     destroyCookie({ res: res }, 'misskeyToken', {
+      path: '/',
+    });
+    destroyCookie({ res: res }, 'mkInstance', {
       path: '/',
     });
 

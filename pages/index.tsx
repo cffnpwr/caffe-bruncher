@@ -2,7 +2,12 @@ import Head from 'next/head';
 import TwitterLogin from '@/components/twitterLogin';
 import MisskeyLogin from '@/components/misskeyLogin';
 import styles from '@/styles/Home.module.css';
-import React, { createContext, useState } from 'react';
+import React, { createContext, useEffect, useState } from 'react';
+import { useRecoilValue } from 'recoil';
+import {
+  mkValidationState,
+  twValidationState,
+} from '@/components/stores/login';
 
 export const twIsLoginContext = createContext<IsLoginContextProps>({
   isLogin: false,
@@ -13,11 +18,30 @@ export const mkIsLoginContext = createContext<IsLoginContextProps>({
   setIsLogin: () => {},
 });
 
+export const twIconContext = createContext<IconContextProps>({
+  iconUrl: '',
+  setIconUrl: () => {},
+});
+export const mkIconContext = createContext<IconContextProps>({
+  iconUrl: '',
+  setIconUrl: () => {},
+});
+
 const Home = () => {
-  const [twIsLogin, setTwIsLogin] = useState<boolean>(false);
-  const [mkIsLogin, setMkIsLogin] = useState<boolean>(false);
+  const twVState = useRecoilValue(twValidationState);
+  const mkVState = useRecoilValue(mkValidationState);
   const [postingContent, setPostingContent] = useState<string>('');
-  const canPosting = twIsLogin && mkIsLogin;
+  const [canPosting, setCanPosting] = useState<boolean>(false);
+
+  const twIconUrl = twVState.data.profile_image_url;
+  const mkIconUrl = mkVState.data.avatarUrl;
+
+  const twIsLogin = twVState.isLogin;
+  const mkIsLogin = mkVState.isLogin;
+
+  useEffect(() => {
+    setCanPosting(twIsLogin && mkIsLogin);
+  }, [setCanPosting, twIsLogin, mkIsLogin]);
 
   const onChangePostingContent = (
     event: React.ChangeEvent<HTMLTextAreaElement>
@@ -26,8 +50,9 @@ const Home = () => {
   };
 
   const login = async (postingContent: string, canPosting: boolean) => {
-    if (!canPosting) return;
+    if (!canPosting || !postingContent) return;
 
+    setCanPosting(false);
     const res = await fetch('/api/post', {
       method: 'POST',
       body: JSON.stringify({
@@ -41,6 +66,7 @@ const Home = () => {
     }
 
     setPostingContent('');
+    setCanPosting(true);
 
     return;
   };
@@ -56,40 +82,43 @@ const Home = () => {
       <main className={styles.main}>
         <h1 className={styles.title}>CaffeBruncher</h1>
 
-        <div className={styles.login}>
-          <twIsLoginContext.Provider
-            value={{
-              isLogin: twIsLogin,
-              setIsLogin: setTwIsLogin,
-            }}
-          >
-            <TwitterLogin />
-          </twIsLoginContext.Provider>
-
-          <mkIsLoginContext.Provider
-            value={{
-              isLogin: mkIsLogin,
-              setIsLogin: setMkIsLogin,
-            }}
-          >
-            <MisskeyLogin />
-          </mkIsLoginContext.Provider>
-        </div>
         <div>
-          <textarea
-            value={postingContent}
-            disabled={!canPosting}
-            onChange={onChangePostingContent}
-          ></textarea>
-          <button
-            type='submit'
-            disabled={!canPosting}
-            onClick={() => {
-              login(postingContent, canPosting);
-            }}
-          >
-            Send
-          </button>
+          <div>
+            <div className={styles.topbar}>
+              <div>
+                <img
+                  src={twIconUrl}
+                  alt='twitter icon'
+                  className={styles.icon}
+                />
+                <img
+                  src={mkIconUrl}
+                  alt='misskey icon'
+                  className={styles.icon}
+                />
+              </div>
+              <button
+                type='submit'
+                disabled={!canPosting}
+                onClick={() => {
+                  login(postingContent, canPosting);
+                }}
+              >
+                Send
+              </button>
+            </div>
+            <textarea
+              className={styles.inputArea}
+              value={postingContent}
+              disabled={!canPosting}
+              onChange={onChangePostingContent}
+            ></textarea>
+          </div>
+        </div>
+
+        <div className={styles.login}>
+          <TwitterLogin />
+          <MisskeyLogin />
         </div>
       </main>
     </div>

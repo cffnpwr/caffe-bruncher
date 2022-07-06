@@ -1,16 +1,22 @@
-import { twIsLoginContext } from '@/pages';
 import Router from 'next/router';
-import { useContext, useEffect } from 'react';
-import useSWR, { KeyedMutator } from 'swr';
+import { useEffect } from 'react';
+import { KeyedMutator } from 'swr';
+import { twValidationState } from './stores/login';
+import { useRecoilState } from 'recoil';
+import { useTwLoginStatus } from './stores/swr';
 
 const TwitterLogin = () => {
-  const { data, isValidating, mutate } = useLoginStatus();
-  const isLoginContext = useContext(twIsLoginContext);
-  const isLogin = isLoginContext.isLogin;
+  const { data, isValidating, mutate } = useTwLoginStatus();
+
+  const [vState, setVState] = useRecoilState(twValidationState);
+  const isLogin = vState.isLogin;
 
   useEffect(() => {
-    isLoginContext.setIsLogin(data ? data === '200' : false);
-  }, [isLoginContext.setIsLogin, data]);
+    setVState({
+      isLogin: data ? data.status === 200 : false,
+      data: data ? data.data || '' : '',
+    });
+  }, [setVState, data]);
   return (
     <button onClick={() => login(isLogin, mutate)} disabled={isValidating}>
       {isLogin ? 'Logout Twitter' : 'Login Twitter'}
@@ -35,21 +41,6 @@ const login = async (isLogin: boolean, mutate: KeyedMutator<string>) => {
 
     Router.push(`https://api.twitter.com/oauth/authorize?${oauthToken}`);
   }
-};
-
-const fetcher = (url: string) =>
-  fetch(url, { method: 'GET' }).then((res) => res.text());
-const useLoginStatus = () => {
-  const { data, error, isValidating, mutate } = useSWR(
-    '/api/twitter/login_status',
-    fetcher,
-    {
-      refreshInterval: 5 * 60 * 1000,
-      shouldRetryOnError: false,
-    }
-  );
-
-  return { data, error, isValidating, mutate };
 };
 
 export default TwitterLogin;

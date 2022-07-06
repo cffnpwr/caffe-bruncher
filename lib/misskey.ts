@@ -9,32 +9,27 @@ export class Misskey {
   //  accces token
   private token: MisskeyAccessToken | undefined;
 
-  //  context
-  private ctx: NextApiRequest;
-
   //  instance
   private instance: string;
 
-  constructor(ctx: NextApiRequest, instance: string) {
-    //  set context
-    this.ctx = ctx;
+  //  cookies
+  private cookies: { [key: string]: string };
 
+  constructor(cookies: { [key: string]: string }, instance?: string) {
+    //  set cookie
+    this.cookies = cookies;
+    //  set token
+    this.token = this.getToken();
     //  set instance
-    this.instance = instance;
+    this.instance = instance || cookies['mkInstance'] || '';
   }
 
-  public static async init(
-    ctx: NextApiRequest,
-    instance: string
-  ): Promise<Misskey> {
-    const mkInstance =
-      instance || parseCookies({ req: ctx })['mkInstance'] || '';
-    const misskey = new Misskey(ctx, mkInstance);
+  private getToken(): MisskeyAccessToken | undefined {
+    const tokens = JSON.parse(this.cookies['misskeyToken'] || '{}');
 
-    //  set access token
-    misskey.token = await misskey.getToken();
+    if (!tokens.accessToken || !tokens.accountId) return undefined;
 
-    return misskey;
+    return tokens;
   }
 
   /**
@@ -42,19 +37,6 @@ export class Misskey {
    */
   public getInstance() {
     return this.instance;
-  }
-
-  private async getToken(): Promise<MisskeyAccessToken | undefined> {
-    const cookies = parseCookies({ req: this.ctx }, { path: '/' });
-    const tokens = JSON.parse(cookies['misskeyToken'] || '{}');
-
-    if (!tokens.accessToken || !tokens.accountId) return undefined;
-
-    this.token = tokens;
-    const isValid = await this.validateToken();
-    if (!isValid) return undefined;
-
-    return this.token;
   }
 
   /**
@@ -101,13 +83,18 @@ export class Misskey {
    * validateToken
    */
   public async validateToken() {
+    const result: ValidateResult = {
+      status: 400,
+      data: {},
+    };
+
     if (
       !this.instance ||
       !this.token ||
       !this.token.accountId ||
       !this.token.accessToken
     )
-      return false;
+      return result;
 
     const target = `https://${this.instance}/api/i`;
     const reqBody = {
@@ -118,12 +105,20 @@ export class Misskey {
       method: 'POST',
       body: JSON.stringify(reqBody),
     });
-    if (res.status !== 200) return false;
+    const data = await res.json();
+    if (res.status !== 200) {
+      result.status = res.status;
+      result.data = data;
 
-    const accountId = (await res.json()).id;
-    if (accountId !== this.token.accountId) return false;
+      return result;
+    }
 
-    return true;
+    const accountId = data.id;
+    if (accountId !== this.token.accountId) return result;
+
+    result.status = 200;
+    result.data = data;
+    return result;
   }
 
   /**

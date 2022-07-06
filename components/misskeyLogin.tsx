@@ -1,17 +1,24 @@
-import { mkIsLoginContext } from '@/pages';
+import { mkIconContext, mkIsLoginContext } from '@/pages';
 import Router from 'next/router';
 import React, { useContext, useEffect, useState } from 'react';
-import useSWR, { KeyedMutator } from 'swr';
+import { useRecoilState } from 'recoil';
+import { KeyedMutator } from 'swr';
+import { mkValidationState } from './stores/login';
+import { useMkLoginStatus } from './stores/swr';
 
 const MisskeyLogin = () => {
+  const [vState, setVState] = useRecoilState(mkValidationState);
+
   const [instanceName, setInstanceName] = useState('');
-  const { data, isValidating, mutate } = useLoginStatus();
-  const isLoginContext = useContext(mkIsLoginContext);
-  const isLogin = isLoginContext.isLogin;
+  const { data, isValidating, mutate } = useMkLoginStatus();
+  const isLogin = vState.isLogin;
 
   useEffect(() => {
-    isLoginContext.setIsLogin(data ? data.status === 200 : false);
-  }, [isLoginContext.setIsLogin, data]);
+    setVState({
+      isLogin: data ? data.status === 200 : false,
+      data: data ? data.data || '' : '',
+    });
+  }, [setVState, data]);
 
   const onChangeInstanceName = (
     event: React.ChangeEvent<HTMLInputElement>
@@ -63,21 +70,6 @@ const login = async (
 
     Router.push(url);
   }
-};
-
-const fetcher = (url: string) =>
-  fetch(url, { method: 'GET' }).then((res) => res.json());
-const useLoginStatus = () => {
-  const { data, error, isValidating, mutate } = useSWR(
-    '/api/misskey/login_status',
-    fetcher,
-    {
-      refreshInterval: 5 * 60 * 1000,
-      shouldRetryOnError: false,
-    }
-  );
-
-  return { data, error, isValidating, mutate };
 };
 
 export default MisskeyLogin;

@@ -120,3 +120,19 @@
   justify-content: center;
   align-items: center;
 }
+
+.topbar {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.inputArea {
+  width: 30vw;
+  aspect-ratio: 16 / 9;
+}
+
+.icon {
+  width: 48px;
+  aspect-ratio: 1;
+}

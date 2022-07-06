@@ -1,10 +1,11 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { destroyCookie, setCookie } from 'nookies';
+import { destroyCookie, parseCookies, setCookie } from 'nookies';
 import { Twitter } from '@/lib/twitter';
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   const method = req.method;
-  const twitter = await Twitter.init(req);
+  const cookies = parseCookies({ req: req });
+  const twitter = new Twitter(cookies);
 
   if (method === 'GET') {
     const oauthToken = await twitter.getOAuthToken();
