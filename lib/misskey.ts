@@ -117,7 +117,11 @@ export class Misskey {
       method: 'POST',
       body: JSON.stringify(reqBody),
     });
-    const data = await res.json();
+    let data;
+    try {
+      data = await res.json();
+    } catch (error) {}
+
     if (res.status !== 200) {
       result.status = res.status;
       result.data = data;
