@@ -163,6 +163,7 @@ export class Misskey {
       }),
     });
     if (res.status !== 200) return false;
+    else console.error('error status: ', res.status);
 
     return true;
   }

@@ -156,6 +156,7 @@ export class Twitter {
       }),
     });
     if (res.status !== 201) return false;
+    else console.error('error status: ', res.status);
 
     return true;
   }

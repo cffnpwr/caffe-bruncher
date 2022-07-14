@@ -31,6 +31,8 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     const mkIsSent = await misskey.postContent(mkContent);
 
     if (!twIsSent || !mkIsSent) {
+      console.error('twitter sending: ', twIsSent);
+      console.error('misskey sending: ', mkIsSent);
       res.status(500).send('');
 
       return;

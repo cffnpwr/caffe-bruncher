@@ -57,12 +57,17 @@ const PostForm = () => {
   };
 
   const login = async () => {
-    if (!canPosting || !postingContent) return;
+    if (!canPosting || !postingContent.text) return;
+
+    const content: MisskeyPostingContentProps = JSON.parse(
+      JSON.stringify(postingContent)
+    );
+    if (useCW && !postingContent.cw) content.cw = '';
 
     setCanPosting(false);
     const res = await fetch('/api/post', {
       method: 'POST',
-      body: JSON.stringify(postingContent),
+      body: JSON.stringify(content),
     });
     if (res.status !== 200) {
       console.error(`failed to post. status: ${res.status}`);
