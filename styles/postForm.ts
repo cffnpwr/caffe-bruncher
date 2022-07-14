@@ -23,8 +23,19 @@ export const inputArea = css`
 `;
 export const button = css`
   border: none;
+  border-radius: 8px;
   background-color: transparent;
-  padding: 1em;
+  padding: 0.8em;
+  font-size: large;
+
+  &:hover {
+    background-color: rgba(0, 0, 0, 0.1);
+  }
+
+  &.active {
+    color: white;
+    background-color: black;
+  }
 `;
 
 export const icon = css`

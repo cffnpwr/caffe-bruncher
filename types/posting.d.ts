@@ -1,7 +1,6 @@
 interface MisskeyPostingContentProps {
   text: string;
-  visiblity?: 'public' | 'home' | 'followers' | 'specified';
-  visibleUserId?: string;
+  visiblity?: 'public' | 'home' | 'followers';
   cw?: string;
   localOnly?: boolean;
   fileIds?: string[];

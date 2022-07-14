@@ -20,15 +20,16 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
       return;
     }
+    console.log(body);
 
-    const twIsSent = await twitter.postContent(content);
-    const mkIsSent = await misskey.postContent(content);
+    // const twIsSent = await twitter.postContent(content);
+    // const mkIsSent = await misskey.postContent(content);
 
-    if (!twIsSent || !mkIsSent) {
-      res.status(500).send('');
+    // if (!twIsSent || !mkIsSent) {
+    //   res.status(500).send('');
 
-      return;
-    }
+    //   return;
+    // }
 
     res.status(200).send('');
   }
