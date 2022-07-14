@@ -37,14 +37,17 @@ const PostForm = () => {
     setPostingContent(content);
   };
 
+  const onKeyDown = async (
+    event: React.KeyboardEvent<HTMLTextAreaElement>
+  ): Promise<void> => {
+    if (event.key == 'Enter' && event.ctrlKey) await login();
+  };
+
   const toggleCW = () => {
     setUseCW(!useCW);
   };
 
-  const login = async (
-    postingContent: MisskeyPostingContentProps,
-    canPosting: boolean
-  ) => {
+  const login = async () => {
     if (!canPosting || !postingContent) return;
 
     setCanPosting(false);
@@ -72,13 +75,7 @@ const PostForm = () => {
           <img src={twIconUrl} alt='twitter icon' css={styles.icon} />
           <img src={mkIconUrl} alt='misskey icon' css={styles.icon} />
         </div>
-        <button
-          type='submit'
-          disabled={!canPosting}
-          onClick={() => {
-            login(postingContent, canPosting);
-          }}
-        >
+        <button type='submit' disabled={!canPosting} onClick={login}>
           Send
         </button>
       </header>
@@ -93,6 +90,7 @@ const PostForm = () => {
           value={postingContent.text}
           disabled={!canPosting}
           onChange={onChangePostingContent}
+          onKeyDown={onKeyDown}
           placeholder='What are you doing?'
         ></textarea>
       </div>
