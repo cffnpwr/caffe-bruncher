@@ -140,7 +140,7 @@ export class Misskey {
   /**
    * postContent
    */
-  public async postContent(content: string) {
+  public async postContent(content: MisskeyPostingContentProps) {
     if (
       !content ||
       !this.instance ||
@@ -159,7 +159,7 @@ export class Misskey {
       },
       body: JSON.stringify({
         i: this.token.accessToken,
-        text: content,
+        ...content,
       }),
     });
     if (res.status !== 200) return false;

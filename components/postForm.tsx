@@ -26,13 +26,22 @@ const PostForm = () => {
     setCanPosting(twIsLogin && mkIsLogin);
   }, [setCanPosting, twIsLogin, mkIsLogin]);
 
-  const onChangePostingContent = (
+  const onChangePostingText = (
     event: React.ChangeEvent<HTMLTextAreaElement>
   ): void => {
     const content: MisskeyPostingContentProps = JSON.parse(
       JSON.stringify(postingContent)
     );
     content.text = event.target.value;
+
+    setPostingContent(content);
+  };
+
+  const onChangeCW = (event: React.ChangeEvent<HTMLInputElement>): void => {
+    const content: MisskeyPostingContentProps = JSON.parse(
+      JSON.stringify(postingContent)
+    );
+    content.cw = event.target.value;
 
     setPostingContent(content);
   };
@@ -81,7 +90,12 @@ const PostForm = () => {
       </header>
       <div className='form'>
         {useCW ? (
-          <input type='text' css={styles.input} placeholder='Comments' />
+          <input
+            type='text'
+            css={styles.input}
+            placeholder='Comments'
+            onChange={onChangeCW}
+          />
         ) : (
           ''
         )}
@@ -89,7 +103,7 @@ const PostForm = () => {
           css={[styles.input, styles.inputArea]}
           value={postingContent.text}
           disabled={!canPosting}
-          onChange={onChangePostingContent}
+          onChange={onChangePostingText}
           onKeyDown={onKeyDown}
           placeholder='What are you doing?'
         ></textarea>

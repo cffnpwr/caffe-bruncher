@@ -5,8 +5,7 @@ import { parseCookies } from 'nookies';
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   if (req.method === 'POST') {
-    const body = JSON.parse(req.body);
-    const content = (body.content as string) || '';
+    const body = JSON.parse(req.body) as MisskeyPostingContentProps;
 
     const cookies = parseCookies({ req: req });
     const twitter = new Twitter(cookies);
@@ -15,21 +14,27 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     const isValid =
       (await twitter.validateToken()) && (await misskey.validateToken());
 
-    if (!isValid) {
+    if (!isValid || !body) {
       res.status(400).send('');
 
       return;
     }
     console.log(body);
 
-    // const twIsSent = await twitter.postContent(content);
-    // const mkIsSent = await misskey.postContent(content);
+    //  投稿内容のコピーと整形
+    const mkContent: MisskeyPostingContentProps = body;
+    const twContent: TwitterPostingContentProps = {
+      text: body.text,
+    };
 
-    // if (!twIsSent || !mkIsSent) {
-    //   res.status(500).send('');
+    const twIsSent = await twitter.postContent(twContent);
+    const mkIsSent = await misskey.postContent(mkContent);
 
-    //   return;
-    // }
+    if (!twIsSent || !mkIsSent) {
+      res.status(500).send('');
+
+      return;
+    }
 
     res.status(200).send('');
   }

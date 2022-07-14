@@ -139,7 +139,7 @@ export class Twitter {
   /**
    * postContent
    */
-  public async postContent(content: string) {
+  public async postContent(content: TwitterPostingContentProps) {
     if (!content) return false;
 
     const target = 'https://api.twitter.com/2/tweets';
@@ -152,7 +152,7 @@ export class Twitter {
         Authorization: oauthHeader.Authorization,
       },
       body: JSON.stringify({
-        text: content,
+        text: content.text,
       }),
     });
     if (res.status !== 201) return false;
