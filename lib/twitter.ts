@@ -155,8 +155,11 @@ export class Twitter {
         text: content.text,
       }),
     });
-    if (res.status !== 201) return false;
-    else console.error('error status: ', res.status);
+    if (res.status !== 201) {
+      console.error('error status: ', res.status);
+
+      return false;
+    }
 
     return true;
   }

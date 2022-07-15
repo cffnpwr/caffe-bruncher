@@ -162,8 +162,11 @@ export class Misskey {
         ...content,
       }),
     });
-    if (res.status !== 200) return false;
-    else console.error('error status: ', res.status);
+    if (res.status !== 200) {
+      console.error('error status: ', res.status);
+
+      return false;
+    }
 
     return true;
   }
