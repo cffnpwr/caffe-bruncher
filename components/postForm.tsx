@@ -89,9 +89,15 @@ const PostForm = () => {
           <img src={twIconUrl} alt='twitter icon' css={styles.icon} />
           <img src={mkIconUrl} alt='misskey icon' css={styles.icon} />
         </div>
-        <button type='submit' disabled={!canPosting} onClick={login}>
-          Send
-        </button>
+        <div>
+          <button css={styles.button}>
+            <span className='material-symbols-rounded'>public</span>
+            {/* 公開範囲 */}
+          </button>
+          <button type='submit' disabled={!canPosting} onClick={login}>
+            Send <span className='material-symbols-rounded'>send</span>
+          </button>
+        </div>
       </header>
       <div className='form'>
         {useCW ? (
@@ -115,20 +121,23 @@ const PostForm = () => {
       </div>
       <footer>
         <button css={styles.button}>
-          <i className='fa-solid fa-images'></i> {/* 画像 */}
+          <span className='material-symbols-rounded'>image</span> {/* 画像 */}
         </button>
         <button css={styles.button}>
-          <i className='fa-solid fa-square-poll-vertical'></i> {/* 投票 */}
+          <span className='material-symbols-rounded'>leaderboard</span>
+          {/* 投票 */}
         </button>
         <button
           css={styles.button}
           className={useCW ? 'active' : ''}
           onClick={toggleCW}
         >
-          <i className='fa-solid fa-eye-low-vision'></i> {/* CW */}
+          <span className='material-symbols-rounded'>visibility_off</span>
+          {/* CW */}
         </button>
         <button css={styles.button}>
-          <i className='fa-solid fa-face-smile'></i> {/* 絵文字 */}
+          <span className='material-symbols-rounded'>sentiment_satisfied</span>
+          {/* 絵文字 */}
         </button>
       </footer>
     </div>
