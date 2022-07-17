@@ -6,11 +6,6 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   if (req.method === 'GET') {
     const cookies = parseCookies({ req: req });
     const twitter = new Twitter(cookies);
-    if (!twitter.hasToken()) {
-      res.status(100).send('');
-
-      return;
-    }
 
     const isValid = await twitter.validateToken();
     const status = isValid.status;
@@ -18,12 +13,9 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     if (status === 401)
       destroyCookie({ res: res }, 'twitterToken', { path: '/' });
 
-    res.status(status).json({
-      status: status,
-      data: isValid.data,
-    });
+    res.status(status).json(isValid);
   } else {
-    res.status(400).send('');
+    res.status(400).json({});
   }
 
   return;

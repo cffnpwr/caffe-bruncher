@@ -6,12 +6,6 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   if (req.method === 'GET') {
     const cookies = parseCookies({ req: req });
     const misskey = new Misskey(cookies);
-    if (!misskey.hasToken()) {
-      res.status(100).send('');
-
-      return;
-    }
-
     const isValid = await misskey.validateToken();
     const status = isValid.status;
 
@@ -21,9 +15,8 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     }
 
     res.status(status).json({
-      status: status,
-      data: isValid.data,
-      instance: isValid ? misskey.getInstance() : '',
+      ...isValid,
+      ...{ instance: isValid ? misskey.getInstance() : '' },
     });
   } else {
     res.status(400).send('');

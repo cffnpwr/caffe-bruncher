@@ -1,7 +1,6 @@
 import Router from 'next/router';
 import React, { useEffect, useState } from 'react';
 import { useRecoilState } from 'recoil';
-import { KeyedMutator } from 'swr';
 import { mkValidationState } from './stores/login';
 import { useMkLoginStatus } from './stores/swr';
 
@@ -10,14 +9,15 @@ const MisskeyLogin = () => {
 
   const [instanceName, setInstanceName] = useState('');
   const { data, isValidating, mutate } = useMkLoginStatus();
-  const isLogin = vState.isLogin;
 
   useEffect(() => {
+    if (isValidating) return;
+
     setVState({
-      isLogin: data ? data.status === 200 || data.status === 100 : false,
+      isLogin: data ? data.status === 200 : false,
       data: data ? data.data || '' : '',
     });
-  }, [setVState, data]);
+  }, [isValidating, setVState, data]);
 
   const onChangeInstanceName = (
     event: React.ChangeEvent<HTMLInputElement>
@@ -25,9 +25,29 @@ const MisskeyLogin = () => {
     setInstanceName(event.target.value);
   };
 
+  const login = async () => {
+    if (vState.isLogin) {
+      await fetch('/api/misskey/auth', {
+        method: 'DELETE',
+      });
+
+      mutate();
+    } else {
+      if (!instanceName) return;
+      const res = await fetch(`/api/misskey/auth?instance=${instanceName}`, {
+        method: 'GET',
+      });
+      if (res.status !== 200) return;
+      const url = (await res.json())['auth_url'] || '';
+      if (!url) return;
+
+      Router.push(url);
+    }
+  };
+
   return (
     <>
-      {isLogin ? (
+      {vState.isLogin ? (
         ''
       ) : (
         <input
@@ -38,38 +58,11 @@ const MisskeyLogin = () => {
           disabled={isValidating}
         />
       )}
-      <button
-        onClick={() => login(isLogin, instanceName, mutate)}
-        disabled={isValidating}
-      >
-        {(isLogin ? 'Logout' : 'Login') + ' Misskey'}
+      <button onClick={login} disabled={isValidating}>
+        {(vState.isLogin ? 'Logout' : 'Login') + ' Misskey'}
       </button>
     </>
   );
-};
-
-const login = async (
-  isLogin: boolean,
-  instanceName: string,
-  mutate: KeyedMutator<string>
-) => {
-  if (isLogin) {
-    await fetch('/api/misskey/auth', {
-      method: 'DELETE',
-    });
-
-    mutate();
-  } else {
-    if (!instanceName) return;
-    const res = await fetch(`/api/misskey/auth?instance=${instanceName}`, {
-      method: 'GET',
-    });
-    if (res.status !== 200) return;
-    const url = (await res.json())['auth_url'] || '';
-    if (!url) return;
-
-    Router.push(url);
-  }
 };
 
 export default MisskeyLogin;

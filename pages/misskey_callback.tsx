@@ -7,25 +7,24 @@ const Page: NextPage = () => {
   const query = router.query;
 
   useEffect(() => {
-    if (router.isReady) {
-      const token = router.query.token;
-      if (!token) router.push('/');
+    const setToken = async () => {
+      if (router.isReady) {
+        const token = router.query.token;
+        if (!token) router.push('/');
 
-      fetch('/api/misskey/auth', {
-        method: 'POST',
-        body: JSON.stringify({
-          token: token,
-        }),
-      })
-        .then((res) => {
-          if (res.status !== 200) console.error('failed:status', res.status);
+        const res = await fetch('/api/misskey/auth', {
+          method: 'POST',
+          body: JSON.stringify({
+            token: token,
+          }),
+        });
 
-          return res.text();
-        })
-        .then((data) => data);
+        if (res.status !== 200) console.error('failed:status', res.status);
 
-      router.push('/');
-    }
+        router.push('/');
+      }
+    };
+    setToken();
   }, [router, query]);
 
   return <></>;
