@@ -42,3 +42,27 @@ export const icon = css`
   width: 48px;
   aspect-ratio: 1;
 `;
+
+export const textCount = css`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+`;
+
+export const textCounts = css`
+  display: flex;
+  justify-content: space-between; ;
+`;
+
+export const textCountLimit = css`
+  display: flex;
+  justify-content: space-between;
+  width: 2.75rem;
+`;
+
+export const countParLimit = css`
+  display: flex;
+  justify-content: space-between;
+  padding-left: 1em;
+  width: 5rem;
+`;

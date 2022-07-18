@@ -89,6 +89,33 @@ const PostForm = () => {
           <img src={twIconUrl} alt='twitter icon' css={styles.icon} />
           <img src={mkIconUrl} alt='misskey icon' css={styles.icon} />
         </div>
+        <div css={styles.textCounts}>
+          <div css={styles.textCount}>
+            <span>Twitter</span>
+            <span>Misskey</span>
+          </div>
+          <div css={styles.textCount}>
+            <div css={styles.countParLimit}>
+              <span>
+                {[...postingContent.text].reduce(
+                  (count, char) => count + Math.min(new Blob([char]).size, 2),
+                  0
+                )}
+              </span>
+              <div css={styles.textCountLimit}>
+                <span>/</span>
+                <span>280</span>
+              </div>
+            </div>
+            <div css={styles.countParLimit}>
+              <span>{[...postingContent.text].length}</span>
+              <div css={styles.textCountLimit}>
+                <span>/</span>
+                <span>3000</span>
+              </div>
+            </div>
+          </div>
+        </div>
         <div>
           <button css={styles.button}>
             <span className='material-symbols-rounded'>public</span>
