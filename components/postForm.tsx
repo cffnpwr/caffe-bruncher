@@ -6,6 +6,11 @@ import {
 } from '@/components/stores/login';
 import * as styles from '@/styles/postForm';
 import { postingContentState } from './stores/postForm';
+import {
+  countGrapheme,
+  countGraphemeForTwitter,
+  devideString,
+} from '@/lib/utils';
 
 const PostForm = () => {
   const twVState = useRecoilValue(twValidationState);
@@ -96,19 +101,14 @@ const PostForm = () => {
           </div>
           <div css={styles.textCount}>
             <div css={styles.countParLimit}>
-              <span>
-                {[...postingContent.text].reduce(
-                  (count, char) => count + Math.min(new Blob([char]).size, 2),
-                  0
-                )}
-              </span>
+              <span>{countGraphemeForTwitter(postingContent.text)}</span>
               <div css={styles.textCountLimit}>
                 <span>/</span>
                 <span>280</span>
               </div>
             </div>
             <div css={styles.countParLimit}>
-              <span>{[...postingContent.text].length}</span>
+              <span>{countGrapheme(postingContent.text)}</span>
               <div css={styles.textCountLimit}>
                 <span>/</span>
                 <span>3000</span>
