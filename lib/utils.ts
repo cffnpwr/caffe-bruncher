@@ -1,7 +1,11 @@
-export const countGrapheme = (str: string) => {
+export const devideToSegment = (str: string) => {
   const segmenter = new Intl.Segmenter('ja', { granularity: 'grapheme' });
 
-  return [...segmenter.segment(str)].length;
+  return [...segmenter.segment(str)];
+};
+
+export const countGrapheme = (str: string) => {
+  return devideToSegment(str).length;
 };
 
 export const countGraphemeForTwitter = (str: string) => {

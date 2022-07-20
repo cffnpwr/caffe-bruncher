@@ -54,14 +54,14 @@ const PostForm = () => {
   const onKeyDown = async (
     event: React.KeyboardEvent<HTMLTextAreaElement>
   ): Promise<void> => {
-    if (event.key == 'Enter' && event.ctrlKey) await login();
+    if (event.key == 'Enter' && event.ctrlKey) await submit();
   };
 
   const toggleCW = () => {
     setUseCW(!useCW);
   };
 
-  const login = async () => {
+  const submit = async () => {
     if (!canPosting || !postingContent.text) return;
 
     const content: MisskeyPostingContentProps = JSON.parse(
@@ -121,7 +121,7 @@ const PostForm = () => {
             <span className='material-symbols-rounded'>public</span>
             {/* 公開範囲 */}
           </button>
-          <button type='submit' disabled={!canPosting} onClick={login}>
+          <button type='submit' disabled={!canPosting} onClick={submit}>
             Send <span className='material-symbols-rounded'>send</span>
           </button>
         </div>

@@ -1,5 +1,10 @@
 import OAuth from 'oauth-1.0a';
 import crypto from 'node:crypto';
+import {
+  countGraphemeForTwitter,
+  devideString,
+  devideToSegment,
+} from './utils';
 
 export class Twitter {
   //  consumer keys
@@ -145,21 +150,79 @@ export class Twitter {
     const target = 'https://api.twitter.com/2/tweets';
     const oauthHeader = this.getOAuthHeader(target, 'POST');
 
-    const res = await fetch(target, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: oauthHeader.Authorization,
-      },
-      body: JSON.stringify({
-        text: content.text,
-      }),
-    });
-    if (res.status !== 201) {
-      console.error('error status: ', res.status);
+    let postingText = content.text;
+    let textLenght = 0;
+    //  長文連結時での前回のツイート
+    let prevTweetId = '';
+    do {
+      let textPartition = '';
+      //  URL部とそれ以外全部に分割
+      const urlPartition = devideString(postingText).filter(Boolean);
 
-      return false;
-    }
+      //  前から280文字を切り出し
+      do {
+        if (
+          //  URL部
+          new RegExp(/^https?:\/\/[\w/:%#\$&\?\(\)~\.=\+\-]+$/).test(
+            urlPartition[0]
+          )
+        ) {
+          if (countGraphemeForTwitter(textPartition + urlPartition[0]) < 280)
+            //  足して280文字を超えない
+            textPartition += urlPartition.shift();
+          //  超えるなら脱出
+          else break;
+        } else {
+          //  URL以外全部
+          //  1文字ずつ分割
+          const segments = devideToSegment(urlPartition[0]);
+          if (
+            countGraphemeForTwitter(textPartition + segments[0].segment) < 280
+          )
+            //  足して280文字を超えない
+            textPartition += segments.shift()?.segment;
+          //  超えるなら脱出
+          else break;
+
+          //  文字を全結合
+          urlPartition[0] = segments.reduce((text, segment) => {
+            return (text += segment.segment);
+          }, '');
+          //  文字数が0なら分割の先頭を消す
+          if (segments.length === 0) urlPartition.shift();
+        }
+      } while (urlPartition.length > 0);
+
+      //  残りの文字列を決定
+      postingText = urlPartition.join('');
+      //  切り出した文字列を送信
+      const body: TwitterPostingBody = {
+        text: textPartition,
+      };
+      if (prevTweetId)
+        body.reply = {
+          in_reply_to_tweet_id: prevTweetId,
+        };
+
+      const res = await fetch(target, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: oauthHeader.Authorization,
+        },
+        body: JSON.stringify(body),
+      });
+      if (res.status !== 201) {
+        console.log(body);
+        console.error('error status: ', res.status);
+
+        return false;
+      }
+      prevTweetId = (await res.json()).data.id;
+
+      //  残った文字列の長さ
+      textLenght = countGraphemeForTwitter(postingText);
+    } while (textLenght > 0);
 
     return true;
   }

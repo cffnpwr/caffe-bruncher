@@ -1,5 +1,6 @@
 import { Misskey } from '@/lib/misskey';
 import { Twitter } from '@/lib/twitter';
+import { countGrapheme } from '@/lib/utils';
 import { NextApiRequest, NextApiResponse } from 'next';
 import { parseCookies } from 'nookies';
 
@@ -12,14 +13,15 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     const misskey = new Misskey(cookies);
 
     const isValid =
-      (await twitter.validateToken()) && (await misskey.validateToken());
+      (await twitter.validateToken()) &&
+      (await misskey.validateToken()) &&
+      countGrapheme(body.text) <= 3000;
 
     if (!isValid || !body) {
       res.status(400).send('');
 
       return;
     }
-    console.log(body);
 
     //  投稿内容のコピーと整形
     const mkContent: MisskeyPostingContentProps = body;
@@ -28,10 +30,15 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     };
 
     const twIsSent = await twitter.postContent(twContent);
-    const mkIsSent = await misskey.postContent(mkContent);
-
-    if (!twIsSent || !mkIsSent) {
+    if (!twIsSent) {
       console.error('twitter sending: ', twIsSent);
+      res.status(500).send('');
+
+      return;
+    }
+
+    const mkIsSent = await misskey.postContent(mkContent);
+    if (!mkIsSent) {
       console.error('misskey sending: ', mkIsSent);
       res.status(500).send('');
 
