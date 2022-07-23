@@ -6,6 +6,10 @@ CaffeBruncherはTwitterとMisskeyに同時投稿を行なうツールです
 
 Tools to post to Twitter and Misskey at the same time.
 
+***これはまだ開発段階です***
+
+***This is still in the development stage.***
+
 ## 必要要件
 
  - [Node.js](https://nodejs.org) v18.3.0
