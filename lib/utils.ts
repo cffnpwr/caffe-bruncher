@@ -1,15 +1,8 @@
-export const devideToSegment = (str: string) => {
-  const segmenter = new Intl.Segmenter('ja', { granularity: 'grapheme' });
+import { length, toArray } from 'stringz';
 
-  return [...segmenter.segment(str)];
-};
-
-export const countGrapheme = (str: string) => {
-  return devideToSegment(str).length;
-};
+export const countGrapheme = (str: string) => length(str);
 
 export const countGraphemeForTwitter = (str: string) => {
-  const segmenter = new Intl.Segmenter('ja', { granularity: 'grapheme' });
   const partition = devideString(str);
 
   return partition.reduce((count: number, text: string): number => {
@@ -18,14 +11,14 @@ export const countGraphemeForTwitter = (str: string) => {
     } else {
       return (
         count +
-        [...segmenter.segment(text)].reduce((countText, segment) => {
+        toArray(text).reduce((countText, segment) => {
           const ranges = [
             [0, 4351],
             [8192, 8205],
             [8208, 8223],
             [8242, 8247],
           ];
-          const charCode = segment.segment.charCodeAt(0);
+          const charCode = segment.charCodeAt(0);
 
           for (const range of ranges) {
             if (range[0] <= charCode && charCode <= range[1])
