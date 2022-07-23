@@ -6,11 +6,7 @@ import {
 } from '@/components/stores/login';
 import * as styles from '@/styles/postForm';
 import { postingContentState } from './stores/postForm';
-import {
-  countGrapheme,
-  countGraphemeForTwitter,
-  devideString,
-} from '@/lib/utils';
+import { countGrapheme, countGraphemeForTwitter } from '@/lib/utils';
 
 const PostForm = () => {
   const twVState = useRecoilValue(twValidationState);
@@ -91,8 +87,12 @@ const PostForm = () => {
     <div css={styles.postForm}>
       <header css={styles.topbar}>
         <div>
-          <img src={twIconUrl} alt='twitter icon' css={styles.icon} />
-          <img src={mkIconUrl} alt='misskey icon' css={styles.icon} />
+          {twIconUrl && (
+            <img src={twIconUrl} alt='twitter icon' css={styles.icon} />
+          )}
+          {mkIconUrl && (
+            <img src={mkIconUrl} alt='misskey icon' css={styles.icon} />
+          )}
         </div>
         <div css={styles.textCounts}>
           <div css={styles.textCount}>

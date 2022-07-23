@@ -1,6 +1,6 @@
 export class Misskey {
   //  app secret
-  private appSecret: string = process.env.APP_SECRET || '';
+  private appSecret: string = '';
   private callbackUrl: string = process.env.MK_CALLBACK || '';
 
   //  accces token
@@ -51,35 +51,68 @@ export class Misskey {
    * getAuthUrl
    */
   public async getAuthUrl() {
-    const target = `https://${this.instance}/api/auth/session/generate`;
+    //  instance check
+    const instanceList = (
+      await (
+        await fetch('https://instanceapp.misskey.page/instances.json', {
+          method: 'GET',
+        })
+      ).json()
+    ).instancesInfos;
+    for (const instance of instanceList) {
+      if (instance.url === this.instance) {
+        //  create app
+        this.appSecret = (
+          await (
+            await fetch(`https://${this.instance}/api/app/create`, {
+              method: 'POST',
+              body: JSON.stringify({
+                name: 'CaffeBruncher',
+                description:
+                  'Tools to post to Twitter and Misskey at the same time.',
+                permission: ['write:notes', 'write:drive'],
+                callbackUrl: this.callbackUrl,
+              }),
+            })
+          ).json()
+        ).secret;
 
-    try {
-      const res = await fetch(target, {
-        method: 'POST',
-        body: JSON.stringify({
-          appSecret: this.appSecret,
-        }),
-      });
-      if (res.status !== 200) return '';
-      const url: string = (await res.json())['url'] || '';
+        //  get auth url
+        const target = `https://${this.instance}/api/auth/session/generate`;
+        try {
+          const res = await fetch(target, {
+            method: 'POST',
+            body: JSON.stringify({
+              appSecret: this.appSecret,
+            }),
+          });
+          if (res.status !== 200) return '';
+          const url: string = (await res.json())['url'] || '';
 
-      return url;
-    } catch (error) {
-      return '';
+          return {
+            secret: this.appSecret,
+            url: url,
+          };
+        } catch (error) {
+          return {};
+        }
+      }
     }
+
+    return {};
   }
 
   /**
    * getAccessToken
    */
-  public async getAccessToken(token: string) {
+  public async getAccessToken(secret: string, token: string) {
     if (!this.instance) return '';
 
     const target = `https://${this.instance}/api/auth/session/userkey`;
     const res = await fetch(target, {
       method: 'POST',
       body: JSON.stringify({
-        appSecret: this.appSecret,
+        appSecret: secret,
         token: token,
       }),
     });

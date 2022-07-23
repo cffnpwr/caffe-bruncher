@@ -16,7 +16,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     }
 
     const authUrl = await misskey.getAuthUrl();
-    if (!authUrl) {
+    if (!authUrl || !authUrl.secret) {
       res.status(400).send('');
 
       return;
@@ -28,8 +28,15 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       sameSite: 'Strict',
       path: '/',
     });
+    setCookie({ res: res }, 'secret', authUrl.secret, {
+      httpOnly: true,
+      maxAge: 60 * 30 * 1000,
+      sameSite: 'Strict',
+      path: '/',
+    });
+
     res.status(200).json({
-      auth_url: authUrl,
+      auth_url: authUrl.url,
     });
   } else if (method === 'POST') {
     const body = JSON.parse(req.body);
@@ -39,12 +46,16 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
       return;
     }
+    const secret = cookies['secret'];
 
-    const tokens = await misskey.getAccessToken(token);
+    const tokens = await misskey.getAccessToken(secret, token);
     setCookie({ res: res }, 'misskeyToken', JSON.stringify(tokens), {
       httpOnly: true,
       maxAge: 60 * 60 * 24 * 30 * 6 * 1000,
       sameSite: 'Strict',
+      path: '/',
+    });
+    destroyCookie({ res: res }, 'secret', {
       path: '/',
     });
 
