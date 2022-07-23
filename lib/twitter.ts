@@ -1,10 +1,7 @@
 import OAuth from 'oauth-1.0a';
 import crypto from 'node:crypto';
-import {
-  countGraphemeForTwitter,
-  devideString,
-  devideToSegment,
-} from './utils';
+import { countGraphemeForTwitter, devideString } from './utils';
+import { toArray } from 'stringz';
 
 export class Twitter {
   //  consumer keys
@@ -175,19 +172,15 @@ export class Twitter {
         } else {
           //  URL以外全部
           //  1文字ずつ分割
-          const segments = devideToSegment(urlPartition[0]);
-          if (
-            countGraphemeForTwitter(textPartition + segments[0].segment) < 280
-          )
+          const segments = toArray(urlPartition[0]);
+          if (countGraphemeForTwitter(textPartition + segments[0]) < 280)
             //  足して280文字を超えない
-            textPartition += segments.shift()?.segment;
+            textPartition += segments.shift();
           //  超えるなら脱出
           else break;
 
           //  文字を全結合
-          urlPartition[0] = segments.reduce((text, segment) => {
-            return (text += segment.segment);
-          }, '');
+          urlPartition[0] = segments.join('');
           //  文字数が0なら分割の先頭を消す
           if (segments.length === 0) urlPartition.shift();
         }
