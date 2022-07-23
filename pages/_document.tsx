@@ -6,7 +6,7 @@ export default function Document() {
       <Head>
         <link
           rel='stylesheet'
-          href='https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@48,700,1,0&display=optional'
+          href='https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@48,700,1,0&display=swap'
         />
       </Head>
       <body>
