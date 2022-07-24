@@ -64,6 +64,7 @@ const PostForm = () => {
       JSON.stringify(postingContent)
     );
     if (useCW && !postingContent.cw) content.cw = '';
+    else delete content.cw;
 
     setCanPosting(false);
     const res = await fetch('/api/post', {
