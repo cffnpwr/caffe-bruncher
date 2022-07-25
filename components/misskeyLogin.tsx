@@ -59,7 +59,7 @@ const MisskeyLogin = () => {
           onChange={onChangeInstanceName}
           label='Instance Name'
           disabled={isValidating}
-          sx={{ pr: 2 }}
+          sx={{ pr: 2, pb: { xs: 2, sm: 0 } }}
         />
       )}
       <LoadingButton

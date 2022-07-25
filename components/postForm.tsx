@@ -100,7 +100,7 @@ const PostForm = () => {
         component='header'
         sx={{
           display: 'flex',
-          flexDirection: 'row',
+          flexDirection: { xs: 'column', md: 'row' },
           justifyContent: 'space-between',
           alignItems: 'center',
         }}
@@ -149,7 +149,10 @@ const PostForm = () => {
             <Grid
               display='flex'
               justifyContent='space-between'
-              sx={{ pl: '1em', width: '5em' }}
+              sx={{
+                pl: '1em',
+                width: '5em',
+              }}
             >
               <span>{countGrapheme(postingContent.text)}</span>
               <Grid
@@ -163,16 +166,22 @@ const PostForm = () => {
             </Grid>
           </Grid>
         </Grid>
-        <Box>
+        <Box
+          sx={{
+            textAlign: { xs: 'end', md: 'initial' },
+            width: { xs: '100%', md: 'auto' },
+          }}
+        >
           <IconButton aria-label='global' color='primary'>
             <Public />
           </IconButton>
           <LoadingButton
             onClick={submit}
             endIcon={<Send />}
-            loading={!canPosting}
+            loading={!canPosting && twIsLogin && mkIsLogin}
             loadingPosition='end'
             variant='contained'
+            disabled={!twIsLogin || !mkIsLogin}
           >
             Send
           </LoadingButton>

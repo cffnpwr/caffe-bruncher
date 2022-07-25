@@ -2,7 +2,14 @@ import Head from 'next/head';
 import TwitterLogin from '@/components/twitterLogin';
 import MisskeyLogin from '@/components/misskeyLogin';
 import PostForm from '@/components/postForm';
-import { Box, Container, Paper, Typography } from '@mui/material';
+import {
+  Box,
+  Container,
+  Paper,
+  Typography,
+  useMediaQuery,
+} from '@mui/material';
+import { theme } from './_app';
 
 const Home = () => {
   return (
@@ -28,12 +35,22 @@ const Home = () => {
         <Typography
           variant='h1'
           align='center'
-          sx={{ fontWeight: '700', m: 8 }}
+          sx={{
+            fontWeight: '700',
+            m: 8,
+            fontSize: { xs: '3rem', md: '6rem' },
+          }}
         >
           CaffeBruncher
         </Typography>
 
-        <Container component='main' maxWidth='md' sx={{ mb: 5 }}>
+        <Container
+          component='main'
+          maxWidth={
+            useMediaQuery(() => theme.breakpoints.up('md')) ? 'md' : 'lg'
+          }
+          sx={{ mb: 5 }}
+        >
           <Paper sx={{ px: 5, py: 2.5 }}>
             <PostForm />
           </Paper>
@@ -47,11 +64,27 @@ const Home = () => {
             alignItems: 'center',
           }}
         >
-          <Box sx={{ px: 3 }}>
-            <TwitterLogin />
-          </Box>
-          <Box sx={{ px: 3, display: 'flex', alignItems: 'center' }}>
-            <MisskeyLogin />
+          <Box
+            sx={{
+              display: 'flex',
+              flexDirection: { xs: 'column', md: 'row' },
+              alignItems: 'center',
+            }}
+          >
+            <Box sx={{ px: 3, py: { xs: 3, md: 0 } }}>
+              <TwitterLogin />
+            </Box>
+            <Box
+              sx={{
+                px: 3,
+                mb: { xs: 2, md: 'auto' },
+                display: 'flex',
+                flexDirection: { xs: 'column', sm: 'row' },
+                alignItems: 'center',
+              }}
+            >
+              <MisskeyLogin />
+            </Box>
           </Box>
         </Box>
       </Container>
