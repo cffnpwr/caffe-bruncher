@@ -4,9 +4,19 @@ import {
   mkValidationState,
   twValidationState,
 } from '@/components/stores/login';
-import * as styles from '@/styles/postForm';
 import { postingContentState } from './stores/postForm';
 import { countGrapheme, countGraphemeForTwitter } from '@/lib/utils';
+import { Avatar, Box, Grid, IconButton, TextField } from '@mui/material';
+import {
+  Send,
+  Public,
+  Image,
+  Visibility,
+  VisibilityOff,
+  Leaderboard,
+  TagFacesRounded,
+} from '@mui/icons-material';
+import { LoadingButton } from '@mui/lab';
 
 const PostForm = () => {
   const twVState = useRecoilValue(twValidationState);
@@ -48,7 +58,7 @@ const PostForm = () => {
   };
 
   const onKeyDown = async (
-    event: React.KeyboardEvent<HTMLTextAreaElement>
+    event: React.KeyboardEvent<HTMLDivElement>
   ): Promise<void> => {
     if (event.key == 'Enter' && event.ctrlKey) await submit();
   };
@@ -85,90 +95,140 @@ const PostForm = () => {
   };
 
   return (
-    <div css={styles.postForm}>
-      <header css={styles.topbar}>
-        <div>
-          {twIconUrl && (
-            <img src={twIconUrl} alt='twitter icon' css={styles.icon} />
-          )}
-          {mkIconUrl && (
-            <img src={mkIconUrl} alt='misskey icon' css={styles.icon} />
-          )}
-        </div>
-        <div css={styles.textCounts}>
-          <div css={styles.textCount}>
+    <Box component='form'>
+      <Box
+        component='header'
+        sx={{
+          display: 'flex',
+          flexDirection: 'row',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+        }}
+      >
+        <Box sx={{ display: 'flex' }}>
+          <Avatar
+            alt='twitter icon'
+            src={twIconUrl}
+            sx={{ width: '48px', height: '48px', bgcolor: '#fff', m: 1 }}
+          />
+          <Avatar
+            alt='misskey icon'
+            src={mkIconUrl}
+            sx={{ width: '48px', height: '48px', bgcolor: '#fff', m: 1 }}
+          />
+        </Box>
+        <Grid display='flex' justifyContent='space-between'>
+          <Grid
+            display='flex'
+            justifyContent='space-between'
+            flexDirection='column'
+          >
             <span>Twitter</span>
             <span>Misskey</span>
-          </div>
-          <div css={styles.textCount}>
-            <div css={styles.countParLimit}>
+          </Grid>
+          <Grid
+            display='flex'
+            justifyContent='space-between'
+            flexDirection='column'
+          >
+            <Grid
+              display='flex'
+              justifyContent='space-between'
+              sx={{ pl: '1em', width: '5em' }}
+            >
               <span>{countGraphemeForTwitter(postingContent.text)}</span>
-              <div css={styles.textCountLimit}>
+              <Grid
+                display='flex'
+                justifyContent='space-between'
+                sx={{ width: '2.75em' }}
+              >
                 <span>/</span>
                 <span>280</span>
-              </div>
-            </div>
-            <div css={styles.countParLimit}>
+              </Grid>
+            </Grid>
+            <Grid
+              display='flex'
+              justifyContent='space-between'
+              sx={{ pl: '1em', width: '5em' }}
+            >
               <span>{countGrapheme(postingContent.text)}</span>
-              <div css={styles.textCountLimit}>
+              <Grid
+                display='flex'
+                justifyContent='space-between'
+                sx={{ width: '2.75em' }}
+              >
                 <span>/</span>
                 <span>3000</span>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div>
-          <button css={styles.button}>
-            <span className='material-symbols-rounded'>public</span>
-            {/* 公開範囲 */}
-          </button>
-          <button type='submit' disabled={!canPosting} onClick={submit}>
-            Send <span className='material-symbols-rounded'>send</span>
-          </button>
-        </div>
-      </header>
-      <div className='form'>
+              </Grid>
+            </Grid>
+          </Grid>
+        </Grid>
+        <Box>
+          <IconButton aria-label='global' color='primary'>
+            <Public />
+          </IconButton>
+          <LoadingButton
+            onClick={submit}
+            endIcon={<Send />}
+            loading={!canPosting}
+            loadingPosition='end'
+            variant='contained'
+          >
+            Send
+          </LoadingButton>
+        </Box>
+      </Box>
+      <Box>
         {useCW ? (
-          <input
+          <TextField
             type='text'
-            css={styles.input}
             placeholder='Comments'
             onChange={onChangeCW}
+            sx={{
+              width: '100%',
+              resize: 'none',
+              py: '1em',
+            }}
           />
         ) : (
           ''
         )}
-        <textarea
-          css={[styles.input, styles.inputArea]}
+        <TextField
+          multiline
+          rows={10}
           value={postingContent.text}
           disabled={!canPosting}
           onChange={onChangePostingText}
           onKeyDown={onKeyDown}
           placeholder='What are you doing?'
-        ></textarea>
-      </div>
+          sx={{
+            height: '100%',
+            width: '100%',
+            resize: 'none',
+            py: '1em',
+          }}
+        />
+      </Box>
       <footer>
-        <button css={styles.button}>
-          <span className='material-symbols-rounded'>image</span> {/* 画像 */}
-        </button>
-        <button css={styles.button}>
-          <span className='material-symbols-rounded'>leaderboard</span>
-          {/* 投票 */}
-        </button>
-        <button
-          css={styles.button}
-          className={useCW ? 'active' : ''}
+        <IconButton aria-label='image' color='primary' size='large'>
+          <Image />
+        </IconButton>
+        <IconButton aria-label='poll' color='primary' size='large'>
+          <Leaderboard />
+        </IconButton>
+        <IconButton
+          aria-label='CW'
+          color='primary'
+          size='large'
           onClick={toggleCW}
         >
-          <span className='material-symbols-rounded'>visibility_off</span>
-          {/* CW */}
-        </button>
-        <button css={styles.button}>
-          <span className='material-symbols-rounded'>sentiment_satisfied</span>
-          {/* 絵文字 */}
-        </button>
+          {useCW ? <VisibilityOff /> : <Visibility />}
+        </IconButton>
+        <IconButton aria-label='emojis' color='primary' size='large'>
+          <TagFacesRounded />
+        </IconButton>
       </footer>
-    </div>
+    </Box>
   );
 };
 

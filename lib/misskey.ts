@@ -196,7 +196,9 @@ export class Misskey {
       }),
     });
     if (res.status !== 200) {
+      console.log(content);
       console.error('error status: ', res.status);
+      console.error('error msg: ', await res.json());
 
       return false;
     }

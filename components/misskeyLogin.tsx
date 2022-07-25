@@ -1,3 +1,5 @@
+import LoadingButton from '@mui/lab/LoadingButton';
+import TextField from '@mui/material/TextField';
 import Router from 'next/router';
 import React, { useEffect, useState } from 'react';
 import { useRecoilState } from 'recoil';
@@ -50,17 +52,23 @@ const MisskeyLogin = () => {
       {vState.isLogin ? (
         ''
       ) : (
-        <input
+        <TextField
+          variant='outlined'
           type='text'
           value={instanceName}
           onChange={onChangeInstanceName}
-          placeholder='Instance Name'
+          label='Instance Name'
           disabled={isValidating}
+          sx={{ pr: 2 }}
         />
       )}
-      <button onClick={login} disabled={isValidating}>
+      <LoadingButton
+        onClick={login}
+        loading={isValidating}
+        variant={vState.isLogin ? 'text' : 'contained'}
+      >
         {(vState.isLogin ? 'Logout' : 'Login') + ' Misskey'}
-      </button>
+      </LoadingButton>
     </>
   );
 };

@@ -3,6 +3,7 @@ import { useEffect } from 'react';
 import { twValidationState } from './stores/login';
 import { useRecoilState } from 'recoil';
 import { useTwLoginStatus } from './stores/swr';
+import LoadingButton from '@mui/lab/LoadingButton';
 
 const TwitterLogin = () => {
   const { data, isValidating, mutate } = useTwLoginStatus();
@@ -38,9 +39,13 @@ const TwitterLogin = () => {
   };
 
   return (
-    <button onClick={login} disabled={isValidating}>
+    <LoadingButton
+      onClick={login}
+      loading={isValidating}
+      variant={vState.isLogin ? 'text' : 'contained'}
+    >
       {vState.isLogin ? 'Logout Twitter' : 'Login Twitter'}
-    </button>
+    </LoadingButton>
   );
 };
 

@@ -208,6 +208,7 @@ export class Twitter {
       if (res.status !== 201) {
         console.log(body);
         console.error('error status: ', res.status);
+        console.error('error msg: ', await res.json());
 
         return false;
       }
