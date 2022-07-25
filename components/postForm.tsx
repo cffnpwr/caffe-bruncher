@@ -73,8 +73,11 @@ const PostForm = () => {
     const content: MisskeyPostingContentProps = JSON.parse(
       JSON.stringify(postingContent)
     );
-    if (useCW && !postingContent.cw) content.cw = '';
-    else delete content.cw;
+    if (useCW) {
+      if (!postingContent.cw) content.cw = '';
+    } else {
+      delete content.cw;
+    }
 
     setCanPosting(false);
     const res = await fetch('/api/post', {
@@ -191,6 +194,7 @@ const PostForm = () => {
         {useCW ? (
           <TextField
             type='text'
+            value={postingContent.cw || ''}
             placeholder='Comments'
             onChange={onChangeCW}
             sx={{
