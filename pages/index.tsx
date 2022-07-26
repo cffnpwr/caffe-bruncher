@@ -23,7 +23,7 @@ const Home = () => {
         <link rel='icon' href='/favicon.ico' />
       </Head>
 
-      <Container
+      <Box
         component='div'
         sx={{
           display: 'flex',
@@ -49,9 +49,9 @@ const Home = () => {
           maxWidth={
             useMediaQuery(() => theme.breakpoints.up('md')) ? 'md' : 'lg'
           }
-          sx={{ mb: 5 }}
+          sx={{ mb: 5, px: { xs: 1, md: 'auto' } }}
         >
-          <Paper sx={{ px: 5, py: 2.5 }}>
+          <Paper sx={{ px: { xs: 2, md: 5 }, py: 2.5 }}>
             <PostForm />
           </Paper>
         </Container>
@@ -87,7 +87,7 @@ const Home = () => {
             </Box>
           </Box>
         </Box>
-      </Container>
+      </Box>
     </>
   );
 };

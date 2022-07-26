@@ -6,7 +6,14 @@ import {
 } from '@/components/stores/login';
 import { postingContentState } from './stores/postForm';
 import { countGrapheme, countGraphemeForTwitter } from '@/lib/utils';
-import { Avatar, Box, Grid, IconButton, TextField } from '@mui/material';
+import {
+  Avatar,
+  Box,
+  Grid,
+  IconButton,
+  TextField,
+  useMediaQuery,
+} from '@mui/material';
 import {
   Send,
   Public,
@@ -17,6 +24,7 @@ import {
   TagFacesRounded,
 } from '@mui/icons-material';
 import { LoadingButton } from '@mui/lab';
+import { theme } from '@/pages/_app';
 
 const PostForm = () => {
   const twVState = useRecoilValue(twValidationState);
@@ -104,78 +112,78 @@ const PostForm = () => {
         sx={{
           display: 'flex',
           flexDirection: { xs: 'column', md: 'row' },
-          justifyContent: 'space-between',
+          justifyContent: 'space-around',
           alignItems: 'center',
         }}
       >
-        <Box sx={{ display: 'flex' }}>
-          <Avatar
-            alt='twitter icon'
-            src={twIconUrl}
-            sx={{ width: '48px', height: '48px', bgcolor: '#fff', m: 1 }}
-          />
-          <Avatar
-            alt='misskey icon'
-            src={mkIconUrl}
-            sx={{ width: '48px', height: '48px', bgcolor: '#fff', m: 1 }}
-          />
-        </Box>
-        <Grid display='flex' justifyContent='space-between'>
-          <Grid
-            display='flex'
-            justifyContent='space-between'
-            flexDirection='column'
-          >
-            <span>Twitter</span>
-            <span>Misskey</span>
-          </Grid>
-          <Grid
-            display='flex'
-            justifyContent='space-between'
-            flexDirection='column'
-          >
-            <Grid
-              display='flex'
-              justifyContent='space-between'
-              sx={{ pl: '1em', width: '5em' }}
-            >
-              <span>{countGraphemeForTwitter(postingContent.text)}</span>
-              <Grid
-                display='flex'
-                justifyContent='space-between'
-                sx={{ width: '2.75em' }}
-              >
-                <span>/</span>
-                <span>280</span>
-              </Grid>
-            </Grid>
-            <Grid
-              display='flex'
-              justifyContent='space-between'
-              sx={{
-                pl: '1em',
-                width: '5em',
-              }}
-            >
-              <span>{countGrapheme(postingContent.text)}</span>
-              <Grid
-                display='flex'
-                justifyContent='space-between'
-                sx={{ width: '2.75em' }}
-              >
-                <span>/</span>
-                <span>3000</span>
-              </Grid>
-            </Grid>
-          </Grid>
-        </Grid>
         <Box
           sx={{
-            textAlign: { xs: 'end', md: 'initial' },
-            width: { xs: '100%', md: 'auto' },
+            display: 'flex',
+            justifyContent: 'space-between',
+            width: '100%',
           }}
         >
-          <IconButton aria-label='global' color='primary'>
+          <Box sx={{ display: 'flex' }}>
+            <Avatar
+              alt='twitter icon'
+              src={twIconUrl}
+              sx={{ width: '48px', height: '48px', bgcolor: '#fff', m: 1 }}
+            />
+            <Avatar
+              alt='misskey icon'
+              src={mkIconUrl}
+              sx={{ width: '48px', height: '48px', bgcolor: '#fff', m: 1 }}
+            />
+          </Box>
+          <Grid display='flex' justifyContent='space-between'>
+            <Grid display='flex' justifyContent='center' flexDirection='column'>
+              <span>Twitter</span>
+              <span>Misskey</span>
+            </Grid>
+            <Grid display='flex' justifyContent='center' flexDirection='column'>
+              <Grid
+                display='flex'
+                justifyContent='space-between'
+                sx={{ pl: '1em', width: '5em' }}
+              >
+                <span>{countGraphemeForTwitter(postingContent.text)}</span>
+                <Grid
+                  display='flex'
+                  justifyContent='space-between'
+                  sx={{ width: '2.75em' }}
+                >
+                  <span>/</span>
+                  <span>280</span>
+                </Grid>
+              </Grid>
+              <Grid
+                display='flex'
+                justifyContent='space-between'
+                sx={{
+                  pl: '1em',
+                  width: '5em',
+                }}
+              >
+                <span>{countGrapheme(postingContent.text)}</span>
+                <Grid
+                  display='flex'
+                  justifyContent='space-between'
+                  sx={{ width: '2.75em' }}
+                >
+                  <span>/</span>
+                  <span>3000</span>
+                </Grid>
+              </Grid>
+            </Grid>
+          </Grid>
+        </Box>
+        <Box
+          sx={{
+            textAlign: 'end',
+            width: { xs: '100%', md: '35%' },
+          }}
+        >
+          <IconButton aria-label='global' color='primary' sx={{ mx: 1 }}>
             <Public />
           </IconButton>
           <LoadingButton

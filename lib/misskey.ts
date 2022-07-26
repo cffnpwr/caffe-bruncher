@@ -52,54 +52,52 @@ export class Misskey {
    */
   public async getAuthUrl() {
     //  instance check
-    const instanceList = (
+    const isInstanceAvailable = await fetch(
+      `https://${this.instance}/api/ping`,
+      {
+        method: 'POST',
+      }
+    )
+      .then((res) => res.json())
+      .then((data) => (data.pong > 0 ? true : false))
+      .catch(() => false);
+
+    if (!isInstanceAvailable) return {};
+    //  create app
+    this.appSecret = (
       await (
-        await fetch('https://instanceapp.misskey.page/instances.json', {
-          method: 'GET',
+        await fetch(`https://${this.instance}/api/app/create`, {
+          method: 'POST',
+          body: JSON.stringify({
+            name: 'CaffeBruncher',
+            description:
+              'Tools to post to Twitter and Misskey at the same time.',
+            permission: ['write:notes', 'write:drive'],
+            callbackUrl: this.callbackUrl,
+          }),
         })
       ).json()
-    ).instancesInfos;
-    for (const instance of instanceList) {
-      if (instance.url === this.instance) {
-        //  create app
-        this.appSecret = (
-          await (
-            await fetch(`https://${this.instance}/api/app/create`, {
-              method: 'POST',
-              body: JSON.stringify({
-                name: 'CaffeBruncher',
-                description:
-                  'Tools to post to Twitter and Misskey at the same time.',
-                permission: ['write:notes', 'write:drive'],
-                callbackUrl: this.callbackUrl,
-              }),
-            })
-          ).json()
-        ).secret;
+    ).secret;
 
-        //  get auth url
-        const target = `https://${this.instance}/api/auth/session/generate`;
-        try {
-          const res = await fetch(target, {
-            method: 'POST',
-            body: JSON.stringify({
-              appSecret: this.appSecret,
-            }),
-          });
-          if (res.status !== 200) return '';
-          const url: string = (await res.json())['url'] || '';
+    //  get auth url
+    const target = `https://${this.instance}/api/auth/session/generate`;
+    try {
+      const res = await fetch(target, {
+        method: 'POST',
+        body: JSON.stringify({
+          appSecret: this.appSecret,
+        }),
+      });
+      if (res.status !== 200) return '';
+      const url: string = (await res.json())['url'] || '';
 
-          return {
-            secret: this.appSecret,
-            url: url,
-          };
-        } catch (error) {
-          return {};
-        }
-      }
+      return {
+        secret: this.appSecret,
+        url: url,
+      };
+    } catch (error) {
+      return {};
     }
-
-    return {};
   }
 
   /**
