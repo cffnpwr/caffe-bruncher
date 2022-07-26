@@ -4,6 +4,7 @@ import CssBaseline from '@mui/material/CssBaseline';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import type { AppProps } from 'next/app';
 import Head from 'next/head';
+import { useEffect, useState } from 'react';
 import { RecoilRoot } from 'recoil';
 
 const clientSideEmotionCache = createEmotionCache();
@@ -56,8 +57,14 @@ export const theme = createTheme({
 });
 
 function MyApp(props: MyAppProps) {
+  const [showScreen, setShowScreen] = useState(false);
+
+  useEffect(() => {
+    setShowScreen(true);
+  }, []);
+
   const { Component, emotionCache = clientSideEmotionCache, pageProps } = props;
-  return (
+  return showScreen ? (
     <CacheProvider value={emotionCache}>
       <Head>
         <meta name='viewport' content='initial-scale=1, width=device-width' />
@@ -69,6 +76,8 @@ function MyApp(props: MyAppProps) {
         </RecoilRoot>
       </ThemeProvider>
     </CacheProvider>
+  ) : (
+    ''
   );
 }
 

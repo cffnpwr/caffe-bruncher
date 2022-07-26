@@ -9,10 +9,15 @@ import { countGrapheme, countGraphemeForTwitter } from '@/lib/utils';
 import {
   Avatar,
   Box,
+  Divider,
   Grid,
   IconButton,
+  ListItemIcon,
+  ListItemText,
+  Menu,
+  MenuItem,
+  Switch,
   TextField,
-  useMediaQuery,
 } from '@mui/material';
 import {
   Send,
@@ -22,9 +27,11 @@ import {
   VisibilityOff,
   Leaderboard,
   TagFacesRounded,
+  Home,
+  Lock,
+  PublicOff,
 } from '@mui/icons-material';
 import { LoadingButton } from '@mui/lab';
-import { theme } from '@/pages/_app';
 
 const PostForm = () => {
   const twVState = useRecoilValue(twValidationState);
@@ -40,6 +47,10 @@ const PostForm = () => {
 
   const twIsLogin = twVState.isLogin;
   const mkIsLogin = mkVState.isLogin;
+
+  const [visibilityAnchor, setVisibilityAnchor] = useState<null | HTMLElement>(
+    null
+  );
 
   useEffect(() => {
     setCanPosting(twIsLogin && mkIsLogin);
@@ -65,6 +76,19 @@ const PostForm = () => {
     setPostingContent(content);
   };
 
+  const setVisibility = (
+    event: React.MouseEvent<HTMLElement>,
+    visibility: 'public' | 'home' | 'followers'
+  ): void => {
+    const content: MisskeyPostingContentProps = JSON.parse(
+      JSON.stringify(postingContent)
+    );
+    content.visibility = visibility;
+
+    setPostingContent(content);
+    setVisibilityAnchor(null);
+  };
+
   const onKeyDown = async (
     event: React.KeyboardEvent<HTMLDivElement>
   ): Promise<void> => {
@@ -73,6 +97,15 @@ const PostForm = () => {
 
   const toggleCW = () => {
     setUseCW(!useCW);
+  };
+
+  const toggleLocalOnly = () => {
+    const content: MisskeyPostingContentProps = JSON.parse(
+      JSON.stringify(postingContent)
+    );
+    content.localOnly = !content.localOnly;
+
+    setPostingContent(content);
   };
 
   const submit = async () => {
@@ -99,7 +132,11 @@ const PostForm = () => {
       return;
     }
 
-    setPostingContent({ text: '' });
+    setPostingContent({
+      text: '',
+      visibility: postingContent.visibility,
+      cw: postingContent.cw,
+    });
     setCanPosting(true);
 
     return;
@@ -112,7 +149,7 @@ const PostForm = () => {
         sx={{
           display: 'flex',
           flexDirection: { xs: 'column', md: 'row' },
-          justifyContent: 'space-around',
+          justifyContent: 'sponClick={}ace-around',
           alignItems: 'center',
         }}
       >
@@ -121,6 +158,7 @@ const PostForm = () => {
             display: 'flex',
             justifyContent: 'space-between',
             width: '100%',
+            pr: 1,
           }}
         >
           <Box sx={{ display: 'flex' }}>
@@ -180,12 +218,81 @@ const PostForm = () => {
         <Box
           sx={{
             textAlign: 'end',
-            width: { xs: '100%', md: '35%' },
+            width: { xs: '100%', md: '50%' },
           }}
         >
-          <IconButton aria-label='global' color='primary' sx={{ mx: 1 }}>
-            <Public />
+          {postingContent.localOnly ? (
+            <IconButton
+              aria-label='local only'
+              color='primary'
+              disableRipple={true}
+            >
+              <PublicOff />
+            </IconButton>
+          ) : (
+            ''
+          )}
+          <IconButton
+            aria-label='visibility'
+            color='primary'
+            sx={{ ml: 1 }}
+            onClick={(event) => setVisibilityAnchor(event.currentTarget)}
+          >
+            {postingContent.visibility === 'followers' ? (
+              <Lock />
+            ) : postingContent.visibility === 'home' ? (
+              <Home />
+            ) : (
+              <Public />
+            )}
           </IconButton>
+          <Menu
+            anchorEl={visibilityAnchor}
+            open={Boolean(visibilityAnchor)}
+            onClose={() => setVisibilityAnchor(null)}
+          >
+            <MenuItem onClick={(event) => setVisibility(event, 'public')}>
+              <ListItemIcon>
+                <Public color='primary' />
+              </ListItemIcon>
+              <ListItemText
+                primary='パブリック'
+                secondary='すべてのユーザーに公開'
+              />
+            </MenuItem>
+            <MenuItem onClick={(event) => setVisibility(event, 'home')}>
+              <ListItemIcon>
+                <Home color='primary' />
+              </ListItemIcon>
+              <ListItemText
+                primary='ホーム'
+                secondary='ホームタイムラインにのみに公開'
+              />
+            </MenuItem>
+            <MenuItem onClick={(event) => setVisibility(event, 'followers')}>
+              <ListItemIcon>
+                <Lock color='primary' />
+              </ListItemIcon>
+              <ListItemText
+                primary='フォロワー'
+                secondary='自分のフォロワーのみに公開'
+              />
+            </MenuItem>
+            <Divider />
+            <MenuItem onClick={toggleLocalOnly}>
+              <ListItemIcon>
+                <PublicOff color='primary' />
+              </ListItemIcon>
+              <ListItemText
+                primary='ローカルのみ'
+                secondary='リモートユーザーには非公開'
+              />
+              <Switch
+                checked={Boolean(postingContent.localOnly)}
+                onChange={toggleLocalOnly}
+              />
+            </MenuItem>
+          </Menu>
           <LoadingButton
             onClick={submit}
             endIcon={<Send />}
@@ -193,6 +300,7 @@ const PostForm = () => {
             loadingPosition='end'
             variant='contained'
             disabled={!twIsLogin || !mkIsLogin}
+            sx={{ ml: 1 }}
           >
             Send
           </LoadingButton>
