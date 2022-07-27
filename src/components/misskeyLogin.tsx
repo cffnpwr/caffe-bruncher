@@ -3,8 +3,8 @@ import TextField from '@mui/material/TextField';
 import Router from 'next/router';
 import React, { useEffect, useState } from 'react';
 import { useRecoilState } from 'recoil';
-import { mkValidationState } from './stores/login';
-import { useMkLoginStatus } from './stores/swr';
+import { mkValidationState } from '../stores/login';
+import { useMkLoginStatus } from '../stores/swr';
 
 const MisskeyLogin = () => {
   const [vState, setVState] = useRecoilState(mkValidationState);

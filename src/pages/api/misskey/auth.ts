@@ -1,4 +1,4 @@
-import { Misskey } from '@/lib/misskey';
+import { Misskey } from '@/src/lib/misskey';
 import { NextApiRequest, NextApiResponse } from 'next';
 import { destroyCookie, parseCookies, setCookie } from 'nookies';
 

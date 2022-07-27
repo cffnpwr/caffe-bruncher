@@ -1,6 +1,6 @@
-import { Misskey } from '@/lib/misskey';
-import { Twitter } from '@/lib/twitter';
-import { countGrapheme } from '@/lib/utils';
+import { Misskey } from '@/src/lib/misskey';
+import { Twitter } from '@/src/lib/twitter';
+import { countGrapheme } from '@/src/lib/utils';
 import { NextApiRequest, NextApiResponse } from 'next';
 import { parseCookies } from 'nookies';
 

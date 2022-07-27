@@ -1,11 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
-import {
-  mkValidationState,
-  twValidationState,
-} from '@/components/stores/login';
-import { postingContentState } from './stores/postForm';
-import { countGrapheme, countGraphemeForTwitter } from '@/lib/utils';
+import { mkValidationState, twValidationState } from '@/src/stores/login';
+import { postingContentState } from '../stores/postForm';
+import { countGrapheme, countGraphemeForTwitter } from '@/src/lib/utils';
 import {
   Avatar,
   Box,
@@ -173,52 +170,38 @@ const PostForm = () => {
               sx={{ width: '48px', height: '48px', bgcolor: '#fff', m: 1 }}
             />
           </Box>
-          <Grid display='flex' justifyContent='space-between'>
-            <Grid display='flex' justifyContent='center' flexDirection='column'>
-              <span>Twitter</span>
-              <span>Misskey</span>
+          <Grid container sx={{ width: '10em' }}>
+            <Grid item xs={4}>
+              Twitter
             </Grid>
-            <Grid display='flex' justifyContent='center' flexDirection='column'>
-              <Grid
-                display='flex'
-                justifyContent='space-between'
-                sx={{ pl: '1em', width: '5em' }}
-              >
-                <span>{countGraphemeForTwitter(postingContent.text)}</span>
-                <Grid
-                  display='flex'
-                  justifyContent='space-between'
-                  sx={{ width: '2.75em' }}
-                >
-                  <span>/</span>
-                  <span>280</span>
-                </Grid>
-              </Grid>
-              <Grid
-                display='flex'
-                justifyContent='space-between'
-                sx={{
-                  pl: '1em',
-                  width: '5em',
-                }}
-              >
-                <span>{countGrapheme(postingContent.text)}</span>
-                <Grid
-                  display='flex'
-                  justifyContent='space-between'
-                  sx={{ width: '2.75em' }}
-                >
-                  <span>/</span>
-                  <span>3000</span>
-                </Grid>
-              </Grid>
+            <Grid item xs={4} sx={{ textAlign: 'end' }}>
+              {countGraphemeForTwitter(postingContent.text)}
+            </Grid>
+            <Grid item xs={1} sx={{ textAlign: 'center' }}>
+              /
+            </Grid>
+            <Grid item xs={3} sx={{ textAlign: 'end' }}>
+              280
+            </Grid>
+
+            <Grid item xs={4}>
+              Misskey
+            </Grid>
+            <Grid item xs={4} sx={{ textAlign: 'end' }}>
+              {countGrapheme(postingContent.text)}
+            </Grid>
+            <Grid item xs={1} sx={{ textAlign: 'center' }}>
+              /
+            </Grid>
+            <Grid item xs={3} sx={{ textAlign: 'end' }}>
+              3000
             </Grid>
           </Grid>
         </Box>
         <Box
           sx={{
             textAlign: 'end',
-            width: { xs: '100%', md: '50%' },
+            width: { xs: '100%', md: '12em' },
           }}
         >
           {postingContent.localOnly ? (
@@ -338,7 +321,7 @@ const PostForm = () => {
           }}
         />
       </Box>
-      <footer>
+      <Box component='footer'>
         <IconButton aria-label='image' color='primary' size='large'>
           <Image />
         </IconButton>
@@ -356,7 +339,7 @@ const PostForm = () => {
         <IconButton aria-label='emojis' color='primary' size='large'>
           <TagFacesRounded />
         </IconButton>
-      </footer>
+      </Box>
     </Box>
   );
 };

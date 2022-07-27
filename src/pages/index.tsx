@@ -1,7 +1,7 @@
 import Head from 'next/head';
-import TwitterLogin from '@/components/twitterLogin';
-import MisskeyLogin from '@/components/misskeyLogin';
-import PostForm from '@/components/postForm';
+import TwitterLogin from '@/src/components/twitterLogin';
+import MisskeyLogin from '@/src/components/misskeyLogin';
+import PostForm from '@/src/components/postForm';
 import {
   Box,
   Container,

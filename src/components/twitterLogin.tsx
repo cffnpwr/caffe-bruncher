@@ -1,8 +1,8 @@
 import Router from 'next/router';
 import { useEffect } from 'react';
-import { twValidationState } from './stores/login';
+import { twValidationState } from '../stores/login';
 import { useRecoilState } from 'recoil';
-import { useTwLoginStatus } from './stores/swr';
+import { useTwLoginStatus } from '../stores/swr';
 import LoadingButton from '@mui/lab/LoadingButton';
 
 const TwitterLogin = () => {
