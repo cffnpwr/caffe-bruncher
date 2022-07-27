@@ -26,7 +26,7 @@ import {
   TagFacesRounded,
   Home,
   Lock,
-  PublicOff,
+  CloudOff,
 } from '@mui/icons-material';
 import { LoadingButton } from '@mui/lab';
 
@@ -154,6 +154,7 @@ const PostForm = () => {
           sx={{
             display: 'flex',
             justifyContent: 'space-between',
+            alignItems: 'center',
             width: '100%',
             pr: 1,
           }}
@@ -170,30 +171,38 @@ const PostForm = () => {
               sx={{ width: '48px', height: '48px', bgcolor: '#fff', m: 1 }}
             />
           </Box>
-          <Grid container sx={{ width: '10em' }}>
-            <Grid item xs={4}>
+          <Grid container sx={{ width: '10em', height: 'fit-content' }}>
+            <Grid item xs={4} sx={{ height: 'fit-content' }}>
               Twitter
             </Grid>
-            <Grid item xs={4} sx={{ textAlign: 'end' }}>
+            <Grid item xs={4} sx={{ textAlign: 'end', height: 'fit-content' }}>
               {countGraphemeForTwitter(postingContent.text)}
             </Grid>
-            <Grid item xs={1} sx={{ textAlign: 'center' }}>
+            <Grid
+              item
+              xs={1}
+              sx={{ textAlign: 'center', height: 'fit-content' }}
+            >
               /
             </Grid>
-            <Grid item xs={3} sx={{ textAlign: 'end' }}>
+            <Grid item xs={3} sx={{ textAlign: 'end', height: 'fit-content' }}>
               280
             </Grid>
 
-            <Grid item xs={4}>
+            <Grid item xs={4} sx={{ height: 'fit-content' }}>
               Misskey
             </Grid>
-            <Grid item xs={4} sx={{ textAlign: 'end' }}>
+            <Grid item xs={4} sx={{ textAlign: 'end', height: 'fit-content' }}>
               {countGrapheme(postingContent.text)}
             </Grid>
-            <Grid item xs={1} sx={{ textAlign: 'center' }}>
+            <Grid
+              item
+              xs={1}
+              sx={{ textAlign: 'center', height: 'fit-content' }}
+            >
               /
             </Grid>
-            <Grid item xs={3} sx={{ textAlign: 'end' }}>
+            <Grid item xs={3} sx={{ textAlign: 'end', height: 'fit-content' }}>
               3000
             </Grid>
           </Grid>
@@ -201,7 +210,11 @@ const PostForm = () => {
         <Box
           sx={{
             textAlign: 'end',
-            width: { xs: '100%', md: '12em' },
+            width: {
+              xs: '100%',
+              md: postingContent.localOnly ? '16.5em' : '12em',
+            },
+            ml: 1,
           }}
         >
           {postingContent.localOnly ? (
@@ -209,8 +222,9 @@ const PostForm = () => {
               aria-label='local only'
               color='primary'
               disableRipple={true}
+              sx={{ mr: 0.5 }}
             >
-              <PublicOff />
+              <CloudOff />
             </IconButton>
           ) : (
             ''
@@ -218,7 +232,6 @@ const PostForm = () => {
           <IconButton
             aria-label='visibility'
             color='primary'
-            sx={{ ml: 1 }}
             onClick={(event) => setVisibilityAnchor(event.currentTarget)}
           >
             {postingContent.visibility === 'followers' ? (
@@ -264,7 +277,7 @@ const PostForm = () => {
             <Divider />
             <MenuItem onClick={toggleLocalOnly}>
               <ListItemIcon>
-                <PublicOff color='primary' />
+                <CloudOff color='primary' />
               </ListItemIcon>
               <ListItemText
                 primary='ローカルのみ'
