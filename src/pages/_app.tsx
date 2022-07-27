@@ -6,6 +6,7 @@ import type { AppProps } from 'next/app';
 import Head from 'next/head';
 import { useEffect, useState } from 'react';
 import { RecoilRoot } from 'recoil';
+import CheckLogin from '../components/checkLogin';
 
 const clientSideEmotionCache = createEmotionCache();
 interface MyAppProps extends AppProps {
@@ -67,7 +68,13 @@ function MyApp(props: MyAppProps) {
   return showScreen ? (
     <CacheProvider value={emotionCache}>
       <Head>
+        <title>CaffeBruncher</title>
+        <meta
+          name='description'
+          content='CaffeBruncher is tools to post to Twitter and Misskey at the same time.'
+        />
         <meta name='viewport' content='initial-scale=1, width=device-width' />
+        <link rel='icon' href='/favicon.ico' />
       </Head>
       <ThemeProvider theme={theme}>
         <CssBaseline />

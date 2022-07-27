@@ -1,29 +1,22 @@
 import LoadingButton from '@mui/lab/LoadingButton';
+import { Avatar, Box, Typography } from '@mui/material';
 import TextField from '@mui/material/TextField';
 import Router from 'next/router';
-import React, { useEffect, useState } from 'react';
-import { useRecoilState } from 'recoil';
+import React, { useState } from 'react';
+import { useRecoilValue } from 'recoil';
+import { theme } from '../pages/_app';
 import { mkValidationState } from '../stores/login';
 import { useMkLoginStatus } from '../stores/swr';
 
 const MisskeyLogin = () => {
-  const [vState, setVState] = useRecoilState(mkValidationState);
+  const vState = useRecoilValue(mkValidationState);
 
   const [instanceName, setInstanceName] = useState('');
-  const { data, isValidating, mutate } = useMkLoginStatus();
+  const { isValidating, mutate } = useMkLoginStatus();
 
-  useEffect(() => {
-    if (isValidating) return;
-
-    setVState({
-      isLogin: data ? data.status === 200 : false,
-      data: data ? data.data || '' : '',
-    });
-  }, [isValidating, setVState, data]);
-
-  const onChangeInstanceName = (
+  const onChangeInstanceName = async (
     event: React.ChangeEvent<HTMLInputElement>
-  ): void => {
+  ): Promise<void> => {
     setInstanceName(event.target.value);
   };
 
@@ -48,7 +41,37 @@ const MisskeyLogin = () => {
   };
 
   return (
-    <>
+    <Box
+      sx={{
+        p: 4,
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'space-between',
+        alignItems: 'center ',
+        height: '16em',
+      }}
+    >
+      <Box
+        sx={{
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center ',
+        }}
+      >
+        <Avatar
+          src=''
+          alt='Misskey instance icon'
+          sx={{
+            bgcolor: theme.palette.background.default,
+            mx: '0.5em',
+            my: '0.75em',
+            color: '#86B300',
+          }}
+        >
+          Mi
+        </Avatar>
+        <Typography variant='h5'>Misskeyでログイン</Typography>
+      </Box>
       {vState.isLogin ? (
         ''
       ) : (
@@ -59,17 +82,17 @@ const MisskeyLogin = () => {
           onChange={onChangeInstanceName}
           label='Instance Name'
           disabled={isValidating}
-          sx={{ pr: 2, pb: { xs: 2, sm: 0 } }}
         />
       )}
       <LoadingButton
         onClick={login}
         loading={isValidating}
         variant={vState.isLogin ? 'text' : 'contained'}
+        sx={{ mt: 0 }}
       >
         {(vState.isLogin ? 'Logout' : 'Login') + ' Misskey'}
       </LoadingButton>
-    </>
+    </Box>
   );
 };
 

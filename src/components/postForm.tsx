@@ -50,7 +50,7 @@ const PostForm = () => {
   );
 
   useEffect(() => {
-    setCanPosting(twIsLogin && mkIsLogin);
+    setCanPosting(Boolean(twIsLogin) && Boolean(mkIsLogin));
   }, [setCanPosting, twIsLogin, mkIsLogin]);
 
   const onChangePostingText = (

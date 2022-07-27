@@ -44,15 +44,14 @@ export class Twitter {
    * getOAuthToken
    */
   public async getOAuthToken() {
-    const target = 'https://api.twitter.com/oauth/request_token';
+    const target = `https://api.twitter.com/oauth/request_token?oauth_callback=${encodeURIComponent(
+      this.callbackUrl
+    )}`;
     const oauthHeader = this.getOAuthHeader(target, 'POST');
 
     const res = await fetch(target, {
       method: 'POST',
       headers: oauthHeader,
-      body: JSON.stringify({
-        oauth_callback: this.callbackUrl,
-      }),
     });
     const oauthToken = await res.text();
 
