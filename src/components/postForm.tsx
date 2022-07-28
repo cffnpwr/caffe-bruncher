@@ -15,6 +15,7 @@ import {
   MenuItem,
   Switch,
   TextField,
+  Tooltip,
 } from '@mui/material';
 import {
   Send,
@@ -27,6 +28,7 @@ import {
   Home,
   Lock,
   CloudOff,
+  Cloud,
 } from '@mui/icons-material';
 import { LoadingButton } from '@mui/lab';
 
@@ -212,36 +214,36 @@ const PostForm = () => {
             textAlign: 'end',
             width: {
               xs: '100%',
-              md: postingContent.localOnly ? '16.5em' : '12em',
+              md: '16.5em',
             },
             ml: 1,
           }}
         >
-          {postingContent.localOnly ? (
+          <Tooltip title='local only'>
             <IconButton
               aria-label='local only'
               color='primary'
-              disableRipple={true}
               sx={{ mr: 0.5 }}
+              onClick={toggleLocalOnly}
             >
-              <CloudOff />
+              {postingContent.localOnly ? <CloudOff /> : <Cloud />}
             </IconButton>
-          ) : (
-            ''
-          )}
-          <IconButton
-            aria-label='visibility'
-            color='primary'
-            onClick={(event) => setVisibilityAnchor(event.currentTarget)}
-          >
-            {postingContent.visibility === 'followers' ? (
-              <Lock />
-            ) : postingContent.visibility === 'home' ? (
-              <Home />
-            ) : (
-              <Public />
-            )}
-          </IconButton>
+          </Tooltip>
+          <Tooltip title='visibility'>
+            <IconButton
+              aria-label='visibility'
+              color='primary'
+              onClick={(event) => setVisibilityAnchor(event.currentTarget)}
+            >
+              {postingContent.visibility === 'followers' ? (
+                <Lock />
+              ) : postingContent.visibility === 'home' ? (
+                <Home />
+              ) : (
+                <Public />
+              )}
+            </IconButton>
+          </Tooltip>
           <Menu
             anchorEl={visibilityAnchor}
             open={Boolean(visibilityAnchor)}
