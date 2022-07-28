@@ -4,6 +4,7 @@ import { mkValidationState, twValidationState } from '@/src/stores/login';
 import { postingContentState } from '../stores/postForm';
 import { countGrapheme, countGraphemeForTwitter } from '@/src/lib/utils';
 import {
+  Alert,
   Avatar,
   Box,
   Divider,
@@ -13,6 +14,7 @@ import {
   ListItemText,
   Menu,
   MenuItem,
+  Snackbar,
   Switch,
   TextField,
   Tooltip,
@@ -50,6 +52,9 @@ const PostForm = () => {
   const [visibilityAnchor, setVisibilityAnchor] = useState<null | HTMLElement>(
     null
   );
+
+  const [openSnackbar, setOpenSnackbar] = useState<boolean>(false);
+  const [snackbarMsg, setSnackbarMsg] = useState<string>('');
 
   useEffect(() => {
     setCanPosting(twIsLogin && mkIsLogin);
@@ -107,6 +112,15 @@ const PostForm = () => {
     setPostingContent(content);
   };
 
+  const closeSnackbar = (
+    event?: React.SyntheticEvent | Event,
+    reason?: string
+  ) => {
+    if (reason === 'clickaway') return;
+
+    setOpenSnackbar(false);
+  };
+
   const submit = async () => {
     if (!canPosting || !postingContent.text) return;
 
@@ -126,6 +140,29 @@ const PostForm = () => {
     });
     if (res.status !== 200) {
       console.error(`failed to post. status: ${res.status}`);
+
+      let msg = '何かが起こりました';
+      switch ((await res.json()).status) {
+        case '400b':
+          msg = '不正なリクエストです';
+          break;
+
+        case '500t':
+          msg = `Twitter・${
+            mkVState.data.instance || 'Misskey'
+          }への投稿に失敗しました`;
+          break;
+
+        case '500m':
+          msg = `${mkVState.data.instance || 'Misskey'}への投稿に失敗しました`;
+          break;
+
+        default:
+          break;
+      }
+      setSnackbarMsg(msg);
+      setOpenSnackbar(true);
+
       setCanPosting(true);
 
       return;
@@ -355,6 +392,20 @@ const PostForm = () => {
           <TagFacesRounded />
         </IconButton>
       </Box>
+      <Snackbar
+        open={openSnackbar}
+        autoHideDuration={3000}
+        onClose={closeSnackbar}
+      >
+        <Alert
+          onClose={closeSnackbar}
+          severity='error'
+          sx={{ width: '100%' }}
+          variant='filled'
+        >
+          {snackbarMsg}
+        </Alert>
+      </Snackbar>
     </Box>
   );
 };
