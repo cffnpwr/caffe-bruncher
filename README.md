@@ -29,15 +29,6 @@ yarn install
 
 ### 開発用サーバーの起動
 
-`.env.development`もしくは`.env.development.local`を作成し、以下の内容を記述します
-
-```
-CK=[your consumer key for twitter API]
-CS=[your consumer secret for twitter API]
-TW_OAUTH_CALLBACK=http://localhost:3000/twitter_callback
-MK_CALLBACK=http://localhost:3000/misskey_callback
-```
-
 以下のコマンドを実行します
 
 ```sh
@@ -46,21 +37,8 @@ yarn dev
 
 ### ビルド
 
-`.env.production`もしくは`.env.production.local`を作成し、以下の内容を記述します
-
-```
-CK=[your consumer key for twitter API]
-CS=[your consumer secret for twitter API]
-TW_OAUTH_CALLBACK=[your server's URL]/twitter_callback # e.g. https://hogehoge.com/twitter_callback
-MK_CALLBACK=[your server's URL]/misskey_callback       # e.g. https://hogehoge.com/misskey_callback
-```
-
 以下のコマンドを実行します
 
 ```sh
 yarn build
 ```
-
-## その他
-
-開発は`development`ブランチで行なわれています
