@@ -20,14 +20,14 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     const oauthToken = body['oauth_token'] || '';
     const oauthVerifier = body['oauth_verifier'] || '';
     if (!oauthToken || !oauthVerifier) {
-      res.status(400).send({});
+      res.status(400).json({});
 
       return;
     }
 
     const tokens = await twitter.getAccessToken(oauthToken, oauthVerifier);
     if (!tokens.accessSecret || !tokens.accessToken || !tokens.accountId) {
-      res.status(400).send({});
+      res.status(400).json({});
 
       return;
     }
@@ -39,18 +39,18 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       path: '/',
     });
 
-    res.status(200).send(tokens);
+    res.status(200).json(tokens);
     return;
   } else if (method === 'DELETE') {
     destroyCookie({ res: res }, 'twitterToken', {
       path: '/',
     });
 
-    res.status(200).send({});
+    res.status(200).json({});
     return;
   }
 
-  res.status(404).send({});
+  res.status(404).json({});
   return;
 };
 

@@ -41,6 +41,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       auth_url: authUrl.url,
       secret: authUrl.secret,
     });
+    return;
   } else if (method === 'POST') {
     const body = req.body || {};
     const secret = cookies['secret'] || body.secret;
@@ -69,6 +70,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     });
 
     res.status(200).json({});
+    return;
   } else if (method === 'DELETE') {
     destroyCookie({ res: res }, 'misskeyToken', {
       path: '/',
@@ -77,7 +79,8 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       path: '/',
     });
 
-    res.status(200).send('');
+    res.status(200).json({});
+    return;
   }
 
   res.status(404).json({});
