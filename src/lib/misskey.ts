@@ -50,12 +50,16 @@ export class Misskey {
   /**
    * getAuthUrl
    */
-  public async getAuthUrl() {
+  public async getAuthUrl(callback?: string | null) {
     //  instance check
     const isInstanceAvailable = await fetch(
       `https://${this.instance}/api/ping`,
       {
         method: 'POST',
+        headers: {
+          'Content-Type': 'application/json;charset=utf-8',
+        },
+        body: '{}',
       }
     )
       .then((res) => res.json())
@@ -68,12 +72,16 @@ export class Misskey {
       await (
         await fetch(`https://${this.instance}/api/app/create`, {
           method: 'POST',
+          headers: {
+            'Content-Type': 'application/json;charset=utf-8',
+          },
           body: JSON.stringify({
             name: 'CaffeBruncher',
             description:
               'Tools to post to Twitter and Misskey at the same time.',
             permission: ['write:notes', 'write:drive'],
-            callbackUrl: this.callbackUrl,
+            callbackUrl:
+              callback || (callback === null ? null : this.callbackUrl),
           }),
         })
       ).json()
@@ -84,6 +92,9 @@ export class Misskey {
     try {
       const res = await fetch(target, {
         method: 'POST',
+        headers: {
+          'Content-Type': 'application/json;charset=utf-8',
+        },
         body: JSON.stringify({
           appSecret: this.appSecret,
         }),
@@ -109,11 +120,15 @@ export class Misskey {
     const target = `https://${this.instance}/api/auth/session/userkey`;
     const res = await fetch(target, {
       method: 'POST',
+      headers: {
+        'Content-Type': 'application/json;charset=utf-8',
+      },
       body: JSON.stringify({
         appSecret: secret,
         token: token,
       }),
     });
+    if (res.status !== 200) return '';
     const resToken = await res.json();
 
     return {
@@ -146,6 +161,9 @@ export class Misskey {
 
     const res = await fetch(target, {
       method: 'POST',
+      headers: {
+        'Content-Type': 'application/json;charset=utf-8',
+      },
       body: JSON.stringify(reqBody),
     });
     let data;
@@ -186,7 +204,7 @@ export class Misskey {
     const res = await fetch(target, {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json',
+        'Content-Type': 'application/json;charset=utf-8',
       },
       body: JSON.stringify({
         i: this.token.accessToken,
