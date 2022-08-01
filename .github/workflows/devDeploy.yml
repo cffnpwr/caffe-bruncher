@@ -1,0 +1,41 @@
+name: development deploy
+on:
+  push:
+    branches: 
+      - development
+    paths: 
+      - 'src/**'
+      - 'public/**'
+      - .babelrc
+      - next.config.js
+      - package.json
+      - tsconfig.json
+      - yarn.lock
+      
+jobs:
+  deploy:
+    environment: 
+      name: Development
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout
+        uses: actions/checkout@v3
+        
+      - name: setup node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+          cache: 'yarn'
+      
+      - run: yarn install
+      - run: yarn build
+      
+      - name: deploy to vercel
+        uses: amondnet/vercel-action@v25
+        with:
+          vercel-token: ${{ secrets.VERCEL_TOKEN }}
+          vercel-args: '--prod'
+          vercel-org-id: ${{ secrets.ORG_ID}}
+          vercel-project-id: ${{ secrets.PROJECT_ID}}
+          working-directory: ./
+          
