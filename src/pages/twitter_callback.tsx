@@ -11,7 +11,7 @@ const Page: NextPage = () => {
       if (router.isReady) {
         const oauthToken = router.query.oauth_token;
         const oauthVerifier = router.query.oauth_verifier;
-        if (!oauthToken || !oauthVerifier) router.push('/');
+        if (!oauthToken || !oauthVerifier) router.push('/login');
 
         const res = await fetch('/api/twitter/auth', {
           method: 'POST',

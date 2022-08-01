@@ -1,23 +1,16 @@
 import Router from 'next/router';
 import { useEffect } from 'react';
 import { twValidationState } from '../stores/login';
-import { useRecoilState } from 'recoil';
+import { useRecoilValue } from 'recoil';
 import { useTwLoginStatus } from '../stores/swr';
 import LoadingButton from '@mui/lab/LoadingButton';
+import { Box, SvgIcon, Typography } from '@mui/material';
+import { Twitter } from '@mui/icons-material';
 
 const TwitterLogin = () => {
-  const { data, isValidating, mutate } = useTwLoginStatus();
+  const { isValidating, mutate } = useTwLoginStatus();
 
-  const [vState, setVState] = useRecoilState(twValidationState);
-
-  useEffect(() => {
-    if (isValidating) return;
-
-    setVState({
-      isLogin: data ? data.status === 200 : false,
-      data: data ? data.data || '' : '',
-    });
-  }, [isValidating, setVState, data]);
+  const vState = useRecoilValue(twValidationState);
 
   const login = async () => {
     if (vState.isLogin) {
@@ -39,13 +32,35 @@ const TwitterLogin = () => {
   };
 
   return (
-    <LoadingButton
-      onClick={login}
-      loading={isValidating}
-      variant={vState.isLogin ? 'text' : 'contained'}
+    <Box
+      sx={{
+        p: 4,
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'space-between',
+        alignItems: 'center ',
+        height: '16em',
+      }}
     >
-      {vState.isLogin ? 'Logout Twitter' : 'Login Twitter'}
-    </LoadingButton>
+      <Box
+        sx={{
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center ',
+          width: 'max-content',
+        }}
+      >
+        <Twitter fontSize='large' sx={{ m: '0.5em', color: '#1da1f2' }} />
+        <Typography variant='h5'>Twitterでログイン</Typography>
+      </Box>
+      <LoadingButton
+        onClick={login}
+        loading={isValidating}
+        variant={vState.isLogin ? 'text' : 'contained'}
+      >
+        {vState.isLogin ? 'Logout Twitter' : 'Login Twitter'}
+      </LoadingButton>
+    </Box>
   );
 };
 

@@ -10,7 +10,7 @@ const Page: NextPage = () => {
     const setToken = async () => {
       if (router.isReady) {
         const token = router.query.token;
-        if (!token) router.push('/');
+        if (!token) router.push('/login');
 
         const res = await fetch('/api/misskey/auth', {
           method: 'POST',

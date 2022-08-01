@@ -57,7 +57,7 @@ const PostForm = () => {
   const [snackbarMsg, setSnackbarMsg] = useState<string>('');
 
   useEffect(() => {
-    setCanPosting(twIsLogin && mkIsLogin);
+    setCanPosting(Boolean(twIsLogin) && Boolean(mkIsLogin));
   }, [setCanPosting, twIsLogin, mkIsLogin]);
 
   const onChangePostingText = (
@@ -188,7 +188,7 @@ const PostForm = () => {
         sx={{
           display: 'flex',
           flexDirection: { xs: 'column', md: 'row' },
-          justifyContent: 'sponClick={}ace-around',
+          justifyContent: 'space-around',
           alignItems: 'center',
         }}
       >
