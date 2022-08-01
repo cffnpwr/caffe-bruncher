@@ -3,6 +3,14 @@ on:
   push:
     branches: 
       - 'development'
+    paths: 
+      - 'src/**'
+      - 'public/**'
+      - '.babelrc'
+      - 'next.config.js'
+      - 'package.json'
+      - 'tsconfig.json'
+      - 'yarn.lock'
       
 jobs:
   deploy:
