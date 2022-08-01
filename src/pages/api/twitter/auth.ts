@@ -36,6 +36,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       httpOnly: true,
       maxAge: 60 * 60 * 24 * 30 * 6 * 1000,
       sameSite: 'Strict',
+      secure: process.env.NODE_ENV === 'production',
       path: '/',
     });
 

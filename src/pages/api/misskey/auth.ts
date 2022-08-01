@@ -28,12 +28,14 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       httpOnly: true,
       maxAge: 60 * 60 * 24 * 30 * 6 * 1000,
       sameSite: 'Strict',
+      secure: process.env.NODE_ENV === 'production',
       path: '/',
     });
     setCookie({ res: res }, 'secret', authUrl.secret, {
       httpOnly: true,
       maxAge: 60 * 30 * 1000,
       sameSite: 'Strict',
+      secure: process.env.NODE_ENV === 'production',
       path: '/',
     });
 
@@ -63,6 +65,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       httpOnly: true,
       maxAge: 60 * 60 * 24 * 30 * 6 * 1000,
       sameSite: 'Strict',
+      secure: process.env.NODE_ENV === 'production',
       path: '/',
     });
     destroyCookie({ res: res }, 'secret', {
