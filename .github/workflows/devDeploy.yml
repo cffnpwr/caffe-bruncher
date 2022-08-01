@@ -2,10 +2,20 @@ name: development deploy
 on:
   push:
     branches: 
-      - 'development'
+      - development
+    paths: 
+      - 'src/**'
+      - 'public/**'
+      - .babelrc
+      - next.config.js
+      - package.json
+      - tsconfig.json
+      - yarn.lock
       
 jobs:
   deploy:
+    environment: 
+      name: Development
     runs-on: ubuntu-latest
     steps:
       - name: checkout

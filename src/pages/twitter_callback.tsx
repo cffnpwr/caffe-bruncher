@@ -15,6 +15,9 @@ const Page: NextPage = () => {
 
         const res = await fetch('/api/twitter/auth', {
           method: 'POST',
+          headers: {
+            'Content-Type': 'application/json;charset=utf-8',
+          },
           body: JSON.stringify({
             oauth_token: oauthToken,
             oauth_verifier: oauthVerifier,

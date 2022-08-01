@@ -3,7 +3,8 @@ import { Misskey } from '@/src/lib/misskey';
 import { parseCookies, destroyCookie } from 'nookies';
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
-  if (req.method === 'GET') {
+  const method = req.method;
+  if (method === 'GET') {
     const cookies = parseCookies({ req: req });
     const misskey = new Misskey(cookies);
     const isValid = await misskey.validateToken();
@@ -18,10 +19,25 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       ...isValid,
       ...{ instance: isValid ? misskey.getInstance() : '' },
     });
-  } else {
-    res.status(400).send('');
+    return;
+  } else if (method === 'POST') {
+    const body = req.body;
+    console.log(body);
+    const misskey = new Misskey(
+      { misskeyToken: JSON.stringify(body) },
+      body.mkInstance
+    );
+    const isValid = await misskey.validateToken();
+    const status = isValid.status;
+
+    res.status(status).json({
+      ...isValid,
+      ...{ instance: isValid ? misskey.getInstance() : '' },
+    });
+    return;
   }
 
+  res.status(404).send({});
   return;
 };
 
