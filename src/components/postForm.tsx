@@ -146,7 +146,7 @@ const PostForm = () => {
         sx={{
           display: 'flex',
           flexDirection: { xs: 'column', md: 'row' },
-          justifyContent: 'sponClick={}ace-around',
+          justifyContent: 'space-around',
           alignItems: 'center',
         }}
       >

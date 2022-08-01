@@ -1,4 +1,4 @@
-import { Box, Grid, Paper, Typography } from '@mui/material';
+import { Box, Grid, Paper } from '@mui/material';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
 import { useRecoilValue } from 'recoil';

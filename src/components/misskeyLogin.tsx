@@ -4,7 +4,6 @@ import TextField from '@mui/material/TextField';
 import Router from 'next/router';
 import React, { useState } from 'react';
 import { useRecoilValue } from 'recoil';
-import { theme } from '../pages/_app';
 import { mkValidationState } from '../stores/login';
 import { useMkLoginStatus } from '../stores/swr';
 
@@ -56,16 +55,17 @@ const MisskeyLogin = () => {
           display: 'flex',
           justifyContent: 'center',
           alignItems: 'center ',
+          width: 'max-content',
         }}
       >
         <Avatar
-          src=''
+          src='https://raw.githubusercontent.com/misskey-dev/assets/main/icon.png'
           alt='Misskey instance icon'
           sx={{
-            bgcolor: theme.palette.background.default,
-            mx: '0.5em',
-            my: '0.75em',
-            color: '#86B300',
+            bgcolor: 'transparent',
+            m: '0.5em',
+            width: '48px',
+            height: '48px',
           }}
         >
           Mi
@@ -76,11 +76,12 @@ const MisskeyLogin = () => {
         ''
       ) : (
         <TextField
-          variant='outlined'
+          variant='standard'
           type='text'
           value={instanceName}
           onChange={onChangeInstanceName}
           label='Instance Name'
+          placeholder='e.g. misskey.io'
           disabled={isValidating}
         />
       )}

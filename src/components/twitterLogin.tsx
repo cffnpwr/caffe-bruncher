@@ -47,6 +47,7 @@ const TwitterLogin = () => {
           display: 'flex',
           justifyContent: 'center',
           alignItems: 'center ',
+          width: 'max-content',
         }}
       >
         <Twitter fontSize='large' sx={{ m: '0.5em', color: '#1da1f2' }} />
