@@ -4,14 +4,19 @@ import TextField from '@mui/material/TextField';
 import Router from 'next/router';
 import React, { useState } from 'react';
 import { useRecoilValue } from 'recoil';
+import { localeState } from '../stores/locale';
 import { mkValidationState } from '../stores/login';
 import { useMkLoginStatus } from '../stores/swr';
+import locales from '../locale';
 
 const MisskeyLogin = () => {
   const vState = useRecoilValue(mkValidationState);
 
   const [instanceName, setInstanceName] = useState('');
   const { isValidating, mutate } = useMkLoginStatus();
+
+  const locale = useRecoilValue(localeState);
+  const localeObj = locales[locale];
 
   const onChangeInstanceName = async (
     event: React.ChangeEvent<HTMLInputElement>
@@ -21,6 +26,8 @@ const MisskeyLogin = () => {
 
   const login = async () => {
     if (vState.isLogin) {
+      const locale = useRecoilValue(localeState);
+      const localeObj = locales[locale];
       await fetch('/api/misskey/auth', {
         method: 'DELETE',
       });
@@ -71,7 +78,9 @@ const MisskeyLogin = () => {
         >
           Mi
         </Avatar>
-        <Typography variant='h5'>Misskeyでログイン</Typography>
+        <Typography variant='h5'>
+          {localeObj.login.misskey.loginWith}
+        </Typography>
       </Box>
       {vState.isLogin ? (
         ''
@@ -81,8 +90,8 @@ const MisskeyLogin = () => {
           type='text'
           value={instanceName}
           onChange={onChangeInstanceName}
-          label='Instance Name'
-          placeholder='e.g. misskey.io'
+          label={localeObj.login.misskey.instance}
+          placeholder={localeObj.login.misskey.egInstance}
           disabled={isValidating}
         />
       )}

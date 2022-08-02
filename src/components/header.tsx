@@ -4,20 +4,33 @@ import {
   Box,
   Button,
   Divider,
+  FormControl,
   IconButton,
   List,
   ListItem,
   ListItemAvatar,
   ListItemText,
+  MenuItem,
+  Select,
+  SelectChangeEvent,
   SwipeableDrawer,
   Toolbar,
+  Tooltip,
   Typography,
 } from '@mui/material';
 import { useState } from 'react';
-import { Close, GitHub, Settings } from '@mui/icons-material';
+import {
+  AccountCircle,
+  Close,
+  GitHub,
+  Settings,
+  Translate,
+} from '@mui/icons-material';
 import { useMkLoginStatus, useTwLoginStatus } from '@/src/stores/swr';
 import { mkValidationState, twValidationState } from '../stores/login';
-import { useRecoilValue } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
+import { localeState } from '../stores/locale';
+import locales from '../locale';
 
 const CaffeBruncherHeader = () => {
   const twVState = useRecoilValue(twValidationState);
@@ -29,6 +42,9 @@ const CaffeBruncherHeader = () => {
 
   const [openSettigs, setOpenSettings] = useState<boolean>(false);
 
+  const [locale, setLocale] = useRecoilState(localeState);
+  const localeObj = locales[locale];
+
   const logout = async (srv: 'misskey' | 'twitter') => {
     await fetch(`/api/${srv}/auth`, {
       method: 'DELETE',
@@ -36,6 +52,10 @@ const CaffeBruncherHeader = () => {
     srv === 'misskey' ? mkMutate() : twMutate();
 
     return;
+  };
+
+  const onChangeLanguage = (event: SelectChangeEvent) => {
+    setLocale(event.target.value as string);
   };
 
   return (
@@ -46,21 +66,25 @@ const CaffeBruncherHeader = () => {
         position='absolute'
       >
         <Toolbar sx={{ justifyContent: 'end' }}>
-          <IconButton
-            href='https://github.com/cffnpwr/caffe-bruncher'
-            target='_blank'
-            color='primary'
-            size='large'
-          >
-            <GitHub />
-          </IconButton>
-          <IconButton
-            color='primary'
-            size='large'
-            onClick={() => setOpenSettings(true)}
-          >
-            <Settings />
-          </IconButton>
+          <Tooltip title={localeObj.tooltip.github}>
+            <IconButton
+              href='https://github.com/cffnpwr/caffe-bruncher'
+              target='_blank'
+              color='primary'
+              size='large'
+            >
+              <GitHub />
+            </IconButton>
+          </Tooltip>
+          <Tooltip title={localeObj.tooltip.settings}>
+            <IconButton
+              color='primary'
+              size='large'
+              onClick={() => setOpenSettings(true)}
+            >
+              <Settings />
+            </IconButton>
+          </Tooltip>
         </Toolbar>
       </AppBar>
       <SwipeableDrawer
@@ -81,7 +105,7 @@ const CaffeBruncherHeader = () => {
             alignItems: 'center',
           }}
         >
-          <Typography variant='h6'>Settings</Typography>
+          <Typography variant='h6'>{localeObj.settings.title}</Typography>
           <IconButton color='primary' onClick={() => setOpenSettings(false)}>
             <Close />
           </IconButton>
@@ -93,7 +117,12 @@ const CaffeBruncherHeader = () => {
               p: 2,
             }}
           >
-            <Typography variant='overline'>Accounts</Typography>
+            <Box sx={{ display: 'flex', alignItems: 'center' }}>
+              <AccountCircle sx={{ mr: 1 }} />
+              <Typography variant='overline'>
+                {localeObj.settings.accounts.title}
+              </Typography>
+            </Box>
 
             <List>
               <Box
@@ -113,7 +142,7 @@ const CaffeBruncherHeader = () => {
                   Logout
                 </Button>
               </Box>
-              <ListItem sx={{ mb: 2 }}>
+              <ListItem>
                 <ListItemAvatar>
                   <Avatar src={twVState.data.profile_image_url} />
                 </ListItemAvatar>
@@ -141,7 +170,7 @@ const CaffeBruncherHeader = () => {
                   Logout
                 </Button>
               </Box>
-              <ListItem sx={{ mb: 2 }}>
+              <ListItem>
                 <ListItemAvatar>
                   <Avatar src={mkVState.data.avatarUrl} />
                 </ListItemAvatar>
@@ -157,6 +186,28 @@ const CaffeBruncherHeader = () => {
         ) : (
           ''
         )}
+        <Box
+          sx={{
+            p: 2,
+          }}
+        >
+          <Box sx={{ display: 'flex', alignItems: 'center' }}>
+            <Translate sx={{ mr: 1 }} />
+            <Typography variant='overline'>
+              {localeObj.settings.language.title}
+            </Typography>
+          </Box>
+
+          <FormControl fullWidth sx={{ my: 2 }}>
+            <Select value={locale} onChange={onChangeLanguage}>
+              {Object.keys(locales).map((locale, index) => (
+                <MenuItem key={index} value={locale}>
+                  {locales[locale].language}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+        </Box>
       </SwipeableDrawer>
     </>
   );
