@@ -66,6 +66,7 @@ const MisskeyLogin = () => {
             m: '0.5em',
             width: '48px',
             height: '48px',
+            color: '#86b300',
           }}
         >
           Mi

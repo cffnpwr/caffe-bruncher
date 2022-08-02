@@ -6,7 +6,7 @@ import type { AppProps } from 'next/app';
 import Head from 'next/head';
 import { useEffect, useState } from 'react';
 import { RecoilRoot } from 'recoil';
-import CheckLogin from '../components/checkLogin';
+import CaffeBruncherHeader from '../components/header';
 
 const clientSideEmotionCache = createEmotionCache();
 interface MyAppProps extends AppProps {
@@ -79,6 +79,7 @@ function MyApp(props: MyAppProps) {
       <ThemeProvider theme={theme}>
         <CssBaseline />
         <RecoilRoot>
+          <CaffeBruncherHeader />
           <Component {...pageProps} />
         </RecoilRoot>
       </ThemeProvider>
