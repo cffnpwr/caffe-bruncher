@@ -26,8 +26,6 @@ const MisskeyLogin = () => {
 
   const login = async () => {
     if (vState.isLogin) {
-      const locale = useRecoilValue(localeState);
-      const localeObj = locales[locale];
       await fetch('/api/misskey/auth', {
         method: 'DELETE',
       });
