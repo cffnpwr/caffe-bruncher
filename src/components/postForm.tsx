@@ -6,6 +6,7 @@ import { countGrapheme, countGraphemeForTwitter } from '@/src/lib/utils';
 import {
   Alert,
   Avatar,
+  Badge,
   Box,
   Divider,
   Grid,
@@ -205,16 +206,36 @@ const PostForm = () => {
           }}
         >
           <Box sx={{ display: 'flex' }}>
-            <Avatar
-              alt='twitter icon'
-              src={twIconUrl}
-              sx={{ width: '48px', height: '48px', bgcolor: '#fff', m: 1 }}
-            />
-            <Avatar
-              alt='misskey icon'
-              src={mkIconUrl}
-              sx={{ width: '48px', height: '48px', bgcolor: '#fff', m: 1 }}
-            />
+            <Badge
+              anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+              badgeContent=' '
+              variant='dot'
+              overlap='circular'
+              sx={{
+                '& .MuiBadge-badge': { bgcolor: '#1da1f2', transform: 'none' },
+              }}
+            >
+              <Avatar
+                alt='twitter icon'
+                src={twIconUrl}
+                sx={{ width: '48px', height: '48px', bgcolor: '#fff', m: 1 }}
+              />
+            </Badge>
+            <Badge
+              anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+              badgeContent=' '
+              variant='dot'
+              overlap='circular'
+              sx={{
+                '& .MuiBadge-badge': { bgcolor: '#86b300', transform: 'none' },
+              }}
+            >
+              <Avatar
+                alt='misskey icon'
+                src={mkIconUrl}
+                sx={{ width: '48px', height: '48px', bgcolor: '#fff', m: 1 }}
+              />
+            </Badge>
           </Box>
           <Grid container sx={{ width: '10em', height: 'fit-content' }}>
             <Grid item xs={4} sx={{ height: 'fit-content' }}>
