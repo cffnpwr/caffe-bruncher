@@ -33,6 +33,8 @@ import {
   Cloud,
 } from '@mui/icons-material';
 import { LoadingButton } from '@mui/lab';
+import locales from '@/src/locale';
+import { localeState } from '../stores/locale';
 
 const PostForm = () => {
   const twVState = useRecoilValue(twValidationState);
@@ -55,6 +57,9 @@ const PostForm = () => {
 
   const [openSnackbar, setOpenSnackbar] = useState<boolean>(false);
   const [snackbarMsg, setSnackbarMsg] = useState<string>('');
+
+  const locale = useRecoilValue(localeState);
+  const localeObj = locales[locale];
 
   useEffect(() => {
     setCanPosting(Boolean(twIsLogin) && Boolean(mkIsLogin));
@@ -144,20 +149,18 @@ const PostForm = () => {
     if (res.status !== 200) {
       console.error(`failed to post. status: ${res.status}`);
 
-      let msg = '何かが起こりました';
+      let msg = localeObj.error.api.post.unknown;
       switch ((await res.json()).status) {
         case '400b':
-          msg = '不正なリクエストです';
+          msg = localeObj.error.api.post['400b'];
           break;
 
         case '500t':
-          msg = `Twitter・${
-            mkVState.data.instance || 'Misskey'
-          }への投稿に失敗しました`;
+          msg = localeObj.error.api.post['500t'];
           break;
 
         case '500m':
-          msg = `${mkVState.data.instance || 'Misskey'}への投稿に失敗しました`;
+          msg = localeObj.error.api.post['500m'];
           break;
 
         default:
@@ -259,7 +262,7 @@ const PostForm = () => {
             ml: 1,
           }}
         >
-          <Tooltip title='local only'>
+          <Tooltip title={localeObj.tooltip.localOnly}>
             <IconButton
               aria-label='local only'
               color='primary'
@@ -269,7 +272,7 @@ const PostForm = () => {
               {postingContent.localOnly ? <CloudOff /> : <Cloud />}
             </IconButton>
           </Tooltip>
-          <Tooltip title='visibility'>
+          <Tooltip title={localeObj.tooltip.visibility}>
             <IconButton
               aria-label='visibility'
               color='primary'
@@ -294,8 +297,8 @@ const PostForm = () => {
                 <Public color='primary' />
               </ListItemIcon>
               <ListItemText
-                primary='パブリック'
-                secondary='すべてのユーザーに公開'
+                primary={localeObj.postForm.visibility.public.primary}
+                secondary={localeObj.postForm.visibility.public.secondary}
               />
             </MenuItem>
             <MenuItem onClick={(event) => setVisibility(event, 'home')}>
@@ -303,8 +306,8 @@ const PostForm = () => {
                 <Home color='primary' />
               </ListItemIcon>
               <ListItemText
-                primary='ホーム'
-                secondary='ホームタイムラインにのみに公開'
+                primary={localeObj.postForm.visibility.home.primary}
+                secondary={localeObj.postForm.visibility.home.secondary}
               />
             </MenuItem>
             <MenuItem onClick={(event) => setVisibility(event, 'followers')}>
@@ -312,8 +315,8 @@ const PostForm = () => {
                 <Lock color='primary' />
               </ListItemIcon>
               <ListItemText
-                primary='フォロワー'
-                secondary='自分のフォロワーのみに公開'
+                primary={localeObj.postForm.visibility.followers.primary}
+                secondary={localeObj.postForm.visibility.followers.secondary}
               />
             </MenuItem>
             <Divider />
@@ -322,8 +325,8 @@ const PostForm = () => {
                 <CloudOff color='primary' />
               </ListItemIcon>
               <ListItemText
-                primary='ローカルのみ'
-                secondary='リモートユーザーには非公開'
+                primary={localeObj.postForm.visibility.localOnly.primary}
+                secondary={localeObj.postForm.visibility.localOnly.secondary}
               />
               <Switch
                 checked={Boolean(postingContent.localOnly)}
@@ -340,7 +343,7 @@ const PostForm = () => {
             disabled={!twIsLogin || !mkIsLogin}
             sx={{ ml: 1 }}
           >
-            Send
+            {localeObj.postForm.send}
           </LoadingButton>
         </Box>
       </Box>
@@ -349,7 +352,7 @@ const PostForm = () => {
           <TextField
             type='text'
             value={postingContent.cw || ''}
-            placeholder='Comments'
+            placeholder={localeObj.postForm.cw}
             onChange={onChangeCW}
             sx={{
               width: '100%',
@@ -367,7 +370,7 @@ const PostForm = () => {
           disabled={!canPosting}
           onChange={onChangePostingText}
           onKeyDown={onKeyDown}
-          placeholder='What are you doing?'
+          placeholder={localeObj.postForm.textarea}
           sx={{
             height: '100%',
             width: '100%',
@@ -377,23 +380,31 @@ const PostForm = () => {
         />
       </Box>
       <Box component='footer'>
-        <IconButton aria-label='image' color='primary' size='large'>
-          <Image />
-        </IconButton>
-        <IconButton aria-label='poll' color='primary' size='large'>
-          <Leaderboard />
-        </IconButton>
-        <IconButton
-          aria-label='CW'
-          color='primary'
-          size='large'
-          onClick={toggleCW}
-        >
-          {useCW ? <VisibilityOff /> : <Visibility />}
-        </IconButton>
-        <IconButton aria-label='emojis' color='primary' size='large'>
-          <TagFacesRounded />
-        </IconButton>
+        <Tooltip title={localeObj.tooltip.image}>
+          <IconButton aria-label='image' color='primary' size='large'>
+            <Image />
+          </IconButton>
+        </Tooltip>
+        <Tooltip title={localeObj.tooltip.poll}>
+          <IconButton aria-label='poll' color='primary' size='large'>
+            <Leaderboard />
+          </IconButton>
+        </Tooltip>
+        <Tooltip title={localeObj.tooltip.cw}>
+          <IconButton
+            aria-label='CW'
+            color='primary'
+            size='large'
+            onClick={toggleCW}
+          >
+            {useCW ? <VisibilityOff /> : <Visibility />}
+          </IconButton>
+        </Tooltip>
+        <Tooltip title={localeObj.tooltip.emoji}>
+          <IconButton aria-label='emojis' color='primary' size='large'>
+            <TagFacesRounded />
+          </IconButton>
+        </Tooltip>
       </Box>
       <Snackbar
         open={openSnackbar}

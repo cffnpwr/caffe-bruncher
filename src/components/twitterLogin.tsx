@@ -1,16 +1,20 @@
 import Router from 'next/router';
-import { useEffect } from 'react';
 import { twValidationState } from '../stores/login';
 import { useRecoilValue } from 'recoil';
 import { useTwLoginStatus } from '../stores/swr';
 import LoadingButton from '@mui/lab/LoadingButton';
-import { Box, SvgIcon, Typography } from '@mui/material';
+import { Box, Typography } from '@mui/material';
 import { Twitter } from '@mui/icons-material';
+import locales from '../locale';
+import { localeState } from '../stores/locale';
 
 const TwitterLogin = () => {
   const { isValidating, mutate } = useTwLoginStatus();
 
   const vState = useRecoilValue(twValidationState);
+
+  const locale = useRecoilValue(localeState);
+  const localeObj = locales[locale];
 
   const login = async () => {
     if (vState.isLogin) {
@@ -51,7 +55,9 @@ const TwitterLogin = () => {
         }}
       >
         <Twitter fontSize='large' sx={{ m: '0.5em', color: '#1da1f2' }} />
-        <Typography variant='h5'>Twitterでログイン</Typography>
+        <Typography variant='h5'>
+          {localeObj.login.twitter.loginWith}
+        </Typography>
       </Box>
       <LoadingButton
         onClick={login}
