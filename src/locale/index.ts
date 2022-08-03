@@ -1,7 +1,9 @@
 import en from './en';
 import ja from './ja';
+import jaSus from './ja-sus';
 
 export default {
-  ja: ja,
   en: en,
+  ja: ja,
+  'ja-sus': jaSus,
 } as Locales;
