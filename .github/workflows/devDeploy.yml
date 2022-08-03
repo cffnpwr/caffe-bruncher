@@ -4,7 +4,7 @@ on:
     branches: 
       - development
     paths: 
-      ― .github/workflows/devDeploy.yml
+       .github/workflows/devDeploy.yml
       - 'src/**'
       - 'public/**'
       - .babelrc
