@@ -4,6 +4,7 @@ on:
     branches: 
       - development
     paths: 
+      ― .github/workflows/devDeploy.yml
       - 'src/**'
       - 'public/**'
       - .babelrc
@@ -20,15 +21,6 @@ jobs:
     steps:
       - name: checkout
         uses: actions/checkout@v3
-        
-      - name: setup node
-        uses: actions/setup-node@v3
-        with:
-          node-version: 18
-          cache: 'yarn'
-      
-      - run: yarn install
-      - run: yarn build
       
       - name: deploy to vercel
         uses: amondnet/vercel-action@v25
