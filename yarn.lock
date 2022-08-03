@@ -945,6 +945,11 @@ char-regex@^1.0.2:
   resolved "https://registry.yarnpkg.com/char-regex/-/char-regex-1.0.2.tgz#d744358226217f981ed58f479b1d6bcc29545dcf"
   integrity sha512-kWWXztvZ5SBQV+eRgKFeh8q5sLuZY2+8WUIzlxWVTg+oGwY14qylx1KbKzHd8P6ZYkAg0xyIDU9JMHhyJMZ1jw==
 
+cjp@^2.0.3:
+  version "2.0.3"
+  resolved "https://registry.yarnpkg.com/cjp/-/cjp-2.0.3.tgz#80f7309d54d1c8b935d1c215b35f58b7c6b9c1eb"
+  integrity sha512-c/72L+IpfxL9DNU+EMTpXbOZSk406XxUGzHih+1uHPcAvWr6TSOQuZZ05uRfP/d0du/CvK5cR9IU7xF06gZrRw==
+
 clsx@^1.2.1:
   version "1.2.1"
   resolved "https://registry.yarnpkg.com/clsx/-/clsx-1.2.1.tgz#0ddc4a20a549b59c93a4116bb26f5294ca17dc12"

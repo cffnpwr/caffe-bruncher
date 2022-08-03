@@ -9,6 +9,7 @@ import {
   Badge,
   Box,
   Divider,
+  FormControlLabel,
   Grid,
   IconButton,
   ListItemIcon,
@@ -36,6 +37,7 @@ import {
 import { LoadingButton } from '@mui/lab';
 import locales from '@/src/locale';
 import { localeState } from '../stores/locale';
+import { generate } from 'cjp';
 
 const PostForm = () => {
   const twVState = useRecoilValue(twValidationState);
@@ -61,6 +63,8 @@ const PostForm = () => {
 
   const locale = useRecoilValue(localeState);
   const localeObj = locales[locale];
+
+  const [useCjp, setUseCjp] = useState<boolean>(false);
 
   useEffect(() => {
     setCanPosting(Boolean(twIsLogin) && Boolean(mkIsLogin));
@@ -137,6 +141,12 @@ const PostForm = () => {
       if (!postingContent.cw) content.cw = '';
     } else {
       delete content.cw;
+    }
+
+    if (useCjp && locale === 'ja-sus') {
+      content.text = generate(content.text);
+
+      if (useCW) content.cw = generate(content.cw);
     }
 
     setCanPosting(false);
@@ -242,7 +252,11 @@ const PostForm = () => {
               Twitter
             </Grid>
             <Grid item xs={4} sx={{ textAlign: 'end', height: 'fit-content' }}>
-              {countGraphemeForTwitter(postingContent.text)}
+              {countGraphemeForTwitter(
+                useCjp && locale === 'ja-sus'
+                  ? generate(postingContent.text)
+                  : postingContent.text
+              )}
             </Grid>
             <Grid
               item
@@ -259,7 +273,11 @@ const PostForm = () => {
               Misskey
             </Grid>
             <Grid item xs={4} sx={{ textAlign: 'end', height: 'fit-content' }}>
-              {countGrapheme(postingContent.text)}
+              {countGrapheme(
+                useCjp && locale === 'ja-sus'
+                  ? generate(postingContent.text)
+                  : postingContent.text
+              )}
             </Grid>
             <Grid
               item
@@ -400,32 +418,53 @@ const PostForm = () => {
           }}
         />
       </Box>
-      <Box component='footer'>
-        <Tooltip title={localeObj.tooltip.image}>
-          <IconButton aria-label='image' color='primary' size='large'>
-            <Image />
-          </IconButton>
-        </Tooltip>
-        <Tooltip title={localeObj.tooltip.poll}>
-          <IconButton aria-label='poll' color='primary' size='large'>
-            <Leaderboard />
-          </IconButton>
-        </Tooltip>
-        <Tooltip title={localeObj.tooltip.cw}>
-          <IconButton
-            aria-label='CW'
-            color='primary'
-            size='large'
-            onClick={toggleCW}
-          >
-            {useCW ? <VisibilityOff /> : <Visibility />}
-          </IconButton>
-        </Tooltip>
-        <Tooltip title={localeObj.tooltip.emoji}>
-          <IconButton aria-label='emojis' color='primary' size='large'>
-            <TagFacesRounded />
-          </IconButton>
-        </Tooltip>
+      <Box
+        component='footer'
+        sx={{
+          display: 'flex',
+          flexDirection: { xs: 'column', md: 'row' },
+          justifyContent: 'space-between',
+          alignItems: { xs: 'flex-start', md: 'center' },
+        }}
+      >
+        <Box>
+          <Tooltip title={localeObj.tooltip.image}>
+            <IconButton aria-label='image' color='primary' size='large'>
+              <Image />
+            </IconButton>
+          </Tooltip>
+          <Tooltip title={localeObj.tooltip.poll}>
+            <IconButton aria-label='poll' color='primary' size='large'>
+              <Leaderboard />
+            </IconButton>
+          </Tooltip>
+          <Tooltip title={localeObj.tooltip.cw}>
+            <IconButton
+              aria-label='CW'
+              color='primary'
+              size='large'
+              onClick={toggleCW}
+            >
+              {useCW ? <VisibilityOff /> : <Visibility />}
+            </IconButton>
+          </Tooltip>
+          <Tooltip title={localeObj.tooltip.emoji}>
+            <IconButton aria-label='emojis' color='primary' size='large'>
+              <TagFacesRounded />
+            </IconButton>
+          </Tooltip>
+        </Box>
+        {locale === 'ja-sus' ? (
+          <FormControlLabel
+            control={
+              <Switch checked={useCjp} onChange={() => setUseCjp(!useCjp)} />
+            }
+            label='怪レい日本语て投稿ずゑ'
+            sx={{ ml: 0.5 }}
+          />
+        ) : (
+          <Box />
+        )}
       </Box>
       <Snackbar
         open={openSnackbar}
