@@ -10,10 +10,8 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     const isValid = await misskey.validateToken();
     const status = isValid.status;
 
-    if (status === 401 || status === 404 || status === 500) {
+    if (status === 401 || status === 404 || status === 500)
       destroyCookie({ res: res }, 'misskeyToken', { path: '/' });
-      destroyCookie({ res: res }, 'mkInstance', { path: '/' });
-    }
 
     res.status(status).json({
       ...isValid,
@@ -22,7 +20,6 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     return;
   } else if (method === 'POST') {
     const body = req.body;
-    console.log(body);
     const misskey = new Misskey(
       { misskeyToken: JSON.stringify(body) },
       body.mkInstance

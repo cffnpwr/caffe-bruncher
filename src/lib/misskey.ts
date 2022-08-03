@@ -115,7 +115,12 @@ export class Misskey {
    * getAccessToken
    */
   public async getAccessToken(secret: string, token: string) {
-    if (!this.instance) return '';
+    const result = {
+      accountId: '',
+      accessToken: '',
+    };
+
+    if (!this.instance) return result;
 
     const target = `https://${this.instance}/api/auth/session/userkey`;
     const res = await fetch(target, {
@@ -128,13 +133,13 @@ export class Misskey {
         token: token,
       }),
     });
-    if (res.status !== 200) return '';
-    const resToken = await res.json();
+    if (res.status !== 200) return result;
 
-    return {
-      accountId: resToken.user.id || '',
-      accessToken: resToken.accessToken || '',
-    };
+    const resToken = await res.json();
+    result.accessToken = resToken.accessToken;
+    result.accountId = resToken.user.id;
+
+    return result;
   }
 
   /**

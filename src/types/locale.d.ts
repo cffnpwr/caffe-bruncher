@@ -60,6 +60,9 @@ interface Locale {
         '500t': string;
         '500m': string;
       };
+      misskey: {
+        loginStatus: string;
+      };
     };
   };
 }

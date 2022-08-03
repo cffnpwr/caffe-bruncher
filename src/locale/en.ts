@@ -60,6 +60,9 @@ export default {
         '500t': 'Failed to send to Twitter and Misskey',
         '500m': 'Failed to send to Misskey',
       },
+      misskey: {
+        loginStatus: 'Incorrect instance name',
+      },
     },
   },
 } as Locale;

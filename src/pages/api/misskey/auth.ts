@@ -12,14 +12,14 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   if (method === 'GET') {
     const callback = req.query.callback_url as string;
     if (!reqInstance) {
-      res.status(400).send('');
+      res.status(400).json({});
 
       return;
     }
 
     const authUrl = await misskey.getAuthUrl(callback);
     if (!authUrl || !authUrl.secret) {
-      res.status(400).send('');
+      res.status(400).json({});
 
       return;
     }
@@ -48,6 +48,10 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     const body = req.body || {};
     const secret = cookies['secret'] || body.secret;
     const token = body.token;
+    destroyCookie({ res: res }, 'secret', {
+      path: '/',
+    });
+
     if (!secret || !token) {
       res.status(400).json({});
 
@@ -66,9 +70,6 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       maxAge: 60 * 60 * 24 * 30 * 6 * 1000,
       sameSite: 'Strict',
       secure: process.env.NODE_ENV === 'production',
-      path: '/',
-    });
-    destroyCookie({ res: res }, 'secret', {
       path: '/',
     });
 

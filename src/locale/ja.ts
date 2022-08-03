@@ -60,6 +60,9 @@ export default {
         '500t': 'Twitter/Misskeyへの送信に失敗しました',
         '500m': 'Misskeyへの送信に失敗しました',
       },
+      misskey: {
+        loginStatus: 'インスタンス名を正しく入力してください',
+      },
     },
   },
 } as Locale;
