@@ -134,6 +134,12 @@ export class Twitter {
 
     result.status = 200;
     result.data = data;
+
+    //  プロフィール画像の解像度をオリジナルにするためにゴニョゴニョする
+    result.data.profile_image_url = (
+      result.data.profile_image_url as string
+    ).replace(/_normal/, '');
+
     return result;
   }
 
