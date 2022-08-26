@@ -90,10 +90,7 @@ const PostForm = () => {
     setPostingContent(content);
   };
 
-  const setVisibility = (
-    event: React.MouseEvent<HTMLElement>,
-    visibility: 'public' | 'home' | 'followers'
-  ): void => {
+  const setVisibility = (visibility: 'public' | 'home' | 'followers'): void => {
     const content: MisskeyPostingContentProps = JSON.parse(
       JSON.stringify(postingContent)
     );
@@ -150,7 +147,7 @@ const PostForm = () => {
     }
 
     setCanPosting(false);
-    const res = await fetch('/api/post', {
+    const res = await fetch('/api/posts', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json;charset=utf-8',
@@ -331,7 +328,7 @@ const PostForm = () => {
             open={Boolean(visibilityAnchor)}
             onClose={() => setVisibilityAnchor(null)}
           >
-            <MenuItem onClick={(event) => setVisibility(event, 'public')}>
+            <MenuItem onClick={() => setVisibility('public')}>
               <ListItemIcon>
                 <Public color='primary' />
               </ListItemIcon>
@@ -340,7 +337,7 @@ const PostForm = () => {
                 secondary={localeObj.postForm.visibility.public.secondary}
               />
             </MenuItem>
-            <MenuItem onClick={(event) => setVisibility(event, 'home')}>
+            <MenuItem onClick={() => setVisibility('home')}>
               <ListItemIcon>
                 <Home color='primary' />
               </ListItemIcon>
@@ -349,7 +346,7 @@ const PostForm = () => {
                 secondary={localeObj.postForm.visibility.home.secondary}
               />
             </MenuItem>
-            <MenuItem onClick={(event) => setVisibility(event, 'followers')}>
+            <MenuItem onClick={() => setVisibility('followers')}>
               <ListItemIcon>
                 <Lock color='primary' />
               </ListItemIcon>
