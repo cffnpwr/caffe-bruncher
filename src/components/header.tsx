@@ -176,7 +176,7 @@ const CaffeBruncherHeader = () => {
                 </ListItemAvatar>
                 <ListItemText
                   primary={mkVState.data.name}
-                  secondary={`@${mkVState.data.username}`}
+                  secondary={`@${mkVState.data.username}@${mkVState.instance}`}
                   primaryTypographyProps={{ noWrap: true }}
                   secondaryTypographyProps={{ noWrap: true }}
                 />

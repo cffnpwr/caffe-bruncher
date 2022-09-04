@@ -16,4 +16,5 @@ interface ValidateResult {
 interface ValidationState {
   isLogin: boolean | undefined;
   data: any;
+  instance?: string;
 }

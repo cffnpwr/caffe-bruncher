@@ -25,6 +25,7 @@ const CheckLogin = () => {
     setMkVState({
       isLogin: mkData ? mkData.status === 200 : false,
       data: mkData ? mkData.data || '' : '',
+      instance: mkData ? mkData.instance || '' : '',
     });
   }, [mkIsValidating, setMkVState, mkData]);
 

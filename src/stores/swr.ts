@@ -4,7 +4,7 @@ const twFetcher = (url: string) =>
   fetch(url, { method: 'GET' }).then((res) => res.json());
 export const useTwLoginStatus = () => {
   const { data, error, isValidating, mutate } = useSWR(
-    '/api/twitter/login_status',
+    '/api/twitter/auth/status',
     twFetcher,
     {
       refreshInterval: 5 * 60 * 1000,
@@ -19,7 +19,7 @@ const mkFetcher = (url: string) =>
   fetch(url, { method: 'GET' }).then((res) => res.json());
 export const useMkLoginStatus = () => {
   const { data, error, isValidating, mutate } = useSWR(
-    '/api/misskey/login_status',
+    '/api/misskey/auth/status',
     mkFetcher,
     {
       refreshInterval: 5 * 60 * 1000,
