@@ -9,7 +9,7 @@ export const useTwLoginStatus = () => {
     {
       refreshInterval: 5 * 60 * 1000,
       shouldRetryOnError: false,
-    }
+    },
   );
 
   return { data, error, isValidating, mutate };
@@ -24,7 +24,7 @@ export const useMkLoginStatus = () => {
     {
       refreshInterval: 5 * 60 * 1000,
       shouldRetryOnError: false,
-    }
+    },
   );
 
   return { data, error, isValidating, mutate };

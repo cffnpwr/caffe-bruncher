@@ -26,6 +26,9 @@ const TwitterLogin = () => {
     } else {
       const res = await fetch('/api/twitter/auth', {
         method: 'GET',
+        headers: {
+          'Content-Type': 'application/json;charset=utf-8',
+        }
       });
       const oauthToken = (await res.json())['oauth_token'] || '';
 

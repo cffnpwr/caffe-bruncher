@@ -21,14 +21,14 @@ const MisskeyLogin = () => {
   const localeObj = locales[locale];
 
   const onChangeInstanceName = async (
-    event: React.ChangeEvent<HTMLInputElement>
+    event: React.ChangeEvent<HTMLInputElement>,
   ): Promise<void> => {
     setInstanceName(event.target.value);
   };
 
   const closeSnackbar = (
     event?: React.SyntheticEvent | Event,
-    reason?: string
+    reason?: string,
   ) => {
     if (reason === 'clickaway') return;
 
@@ -50,6 +50,9 @@ const MisskeyLogin = () => {
       }
       const res = await fetch(`/api/misskey/auth?instance=${instanceName}`, {
         method: 'GET',
+        headers: {
+          'Content-Type': 'application/json;charset=utf-8',
+        }
       });
       if (res.status !== 200) {
         setOpenSnackbar(true);

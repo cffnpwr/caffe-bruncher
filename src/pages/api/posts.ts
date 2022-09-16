@@ -15,12 +15,12 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     });
     const misskey = new Misskey(
       { ...{ misskeyToken: JSON.stringify(body.misskeyToken) }, ...cookies },
-      body.mkInstance
+      body.mkInstance,
     );
 
     const isValid =
       body &&
-      body.text &&
+      (body.text || (body.fileIds && body.fileIds.mkFileIds < 17 && body.fileIds.twMediaIds < 17)) &&
       (await twitter.validateToken()) &&
       (await misskey.validateToken()) &&
       countGrapheme(body.text) <= 3000;
@@ -32,9 +32,19 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     }
 
     //  投稿内容のコピーと整形
-    const mkContent: MisskeyPostingContentProps = body;
+    const content: PostingContentProps = body;
+    const mkContent: MisskeyPostingContentProps = {
+      text: content.text,
+      visibility: content.visibility,
+      cw: content.cw,
+      localOnly: content.localOnly,
+      fileIds: content.fileIds ? content.fileIds.mkFileIds : undefined,
+      poll: content.poll,
+    };
     const twContent: TwitterPostingContentProps = {
-      text: body.text,
+      text: content.text,
+      mediaIds: content.fileIds ? content.fileIds.twMediaIds : undefined,
+      // poll: content.poll
     };
 
     const twIsSent = await twitter.postContent(twContent);

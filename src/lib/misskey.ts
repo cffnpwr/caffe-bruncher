@@ -1,6 +1,6 @@
 export class Misskey {
   //  app secret
-  private appSecret: string = '';
+  private appSecret = '';
   private callbackUrl: string = process.env.MK_CALLBACK || '';
 
   //  accces token
@@ -10,9 +10,9 @@ export class Misskey {
   private instance: string;
 
   //  cookies
-  private cookies: { [key: string]: string };
+  private cookies: { [key: string]: string; };
 
-  constructor(cookies: { [key: string]: string }, instance?: string) {
+  constructor(cookies: { [key: string]: string; }, instance?: string) {
     //  set cookie
     this.cookies = cookies;
     //  set token
@@ -60,7 +60,7 @@ export class Misskey {
           'Content-Type': 'application/json;charset=utf-8',
         },
         body: '{}',
-      }
+      },
     )
       .then((res) => res.json())
       .then((data) => (data.pong > 0 ? true : false))
@@ -174,7 +174,9 @@ export class Misskey {
     let data;
     try {
       data = await res.json();
-    } catch (error) {}
+    } catch (error) {
+      console.error(error);
+    }
 
     if (res.status !== 200) {
       result.status = res.status;
@@ -192,6 +194,41 @@ export class Misskey {
   }
 
   /**
+   * uploadMedia
+   */
+  public async uploadMedia(file: Buffer, option?: { comment?: string, isSensitive?: boolean; }) {
+    if (!file ||
+      !this.instance ||
+      !this.token ||
+      !this.token.accessToken) return '';
+
+    const target = `https://${this.instance}/api/drive/files/create`;
+    const formData = new FormData();
+    formData.append('i', this.token.accessToken);
+    formData.append('file', new Blob([file.buffer]));
+    if (option) {
+      if (option.comment) formData.append('comment', option.comment);
+      if (option.isSensitive) formData.append('isSensitive', option.isSensitive ? 'true' : 'false');
+    }
+
+    const res = await fetch(target, {
+      method: 'POST',
+      body: formData,
+    });
+    if (res.status !== 200) {
+      console.error('error status: ', res.status);
+      console.error('error msg: ', await res.json());
+      console.error('req body: ', formData);
+
+      return '';
+    }
+
+    const id = (await res.json()).id || '';
+
+    return id;
+  }
+
+  /**
    * postContent
    */
   public async postContent(content: MisskeyPostingContentProps) {
@@ -199,12 +236,14 @@ export class Misskey {
       !content ||
       !this.instance ||
       !this.token ||
-      !this.token.accountId ||
       !this.token.accessToken
     )
       return false;
 
     const target = `https://${this.instance}/api/notes/create`;
+
+    if (content.fileIds && content.fileIds.length <= 0)
+      content.fileIds = undefined;
 
     const res = await fetch(target, {
       method: 'POST',

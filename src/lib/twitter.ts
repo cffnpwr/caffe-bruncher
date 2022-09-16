@@ -11,9 +11,9 @@ export class Twitter {
   //  accesstoken
   private token: TwitterAccessToken | undefined;
   //  cookies
-  private cookies: { [key: string]: string };
+  private cookies: { [key: string]: string; };
 
-  constructor(cookies: { [key: string]: string }) {
+  constructor(cookies: { [key: string]: string; }) {
     //  set cookie
     this.cookies = cookies;
     //  set token
@@ -45,7 +45,7 @@ export class Twitter {
    */
   public async getOAuthToken(pinBase?: boolean) {
     const target = `https://api.twitter.com/oauth/request_token?oauth_callback=${encodeURIComponent(
-      pinBase ? 'oob' : this.callbackUrl
+      pinBase ? 'oob' : this.callbackUrl,
     )}`;
     const oauthHeader = this.getOAuthHeader(target, 'POST');
 
@@ -144,6 +144,96 @@ export class Twitter {
   }
 
   /**
+   * uploadMedia
+   */
+  public async uploadMediaInit(fileSize: number, mimeType: string) {
+    if (!fileSize || !mimeType) return '';
+
+    const target = `https://upload.twitter.com/1.1/media/upload.json?command=INIT&media_type=${encodeURIComponent(
+      mimeType,
+    )}&total_bytes=${encodeURIComponent(fileSize)}`;
+    const oauthHeader = this.getOAuthHeader(target, 'POST');
+
+    const res = await fetch(target, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+        Authorization: oauthHeader.Authorization,
+      },
+    });
+    if (res.status !== 202) {
+      console.log('init');
+      console.error('error status: ', res.status);
+      console.error('error msg: ', await res.json());
+
+      return '';
+    }
+    const mediaId = (await res.json()).media_id_string as string;
+
+    return mediaId;
+  }
+
+  /**
+   * uploadMediaAppend
+   */
+  public async uploadMediaAppend(mediaId: string, file: Buffer) {
+    if (!mediaId || !file) return false;
+
+    const target = `https://upload.twitter.com/1.1/media/upload.json?command=APPEND&media_id=${encodeURIComponent(
+      mediaId,
+    )}&segment_index=0`;
+    const oauthHeader = this.getOAuthHeader(target, 'POST');
+    const body = new FormData();
+    body.append('media', new Blob([file.buffer]));
+
+    const res = await fetch(target, {
+      method: 'POST',
+      headers: {
+        Authorization: oauthHeader.Authorization,
+      },
+      body: body,
+    });
+    if (res.status !== 204) {
+      console.log('append');
+      console.error('error status: ', res.status);
+      console.error('error msg: ', await res.json());
+
+      return false;
+    }
+
+    return true;
+  }
+
+  /**
+   * uploadMediaFinalize
+   */
+  public async uploadMediaFinalize(mediaId: string) {
+    if (!mediaId) return false;
+
+    const target = `https://upload.twitter.com/1.1/media/upload.json?command=FINALIZE&media_id=${encodeURIComponent(
+      mediaId,
+    )}`;
+    const oauthHeader = this.getOAuthHeader(target, 'POST');
+
+    const res = await fetch(target, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+        Authorization: oauthHeader.Authorization,
+      },
+    });
+    if (res.status !== 201) {
+      console.log('finalize');
+      console.error('error status: ', res.status);
+      console.error('error msg: ', await res.json());
+
+      return false;
+    }
+
+    return true;
+  }
+
+  /**
    * postContent
    */
   public async postContent(content: TwitterPostingContentProps) {
@@ -152,7 +242,10 @@ export class Twitter {
     const target = 'https://api.twitter.com/2/tweets';
     const oauthHeader = this.getOAuthHeader(target, 'POST');
 
+    //  文章
     let postingText = content.text;
+    //  Media IDs
+    const mediaIds = content.mediaIds || [];
     let textLenght = 0;
     //  長文連結時での前回のツイート
     let prevTweetId = '';
@@ -162,11 +255,11 @@ export class Twitter {
       const urlPartition = devideString(postingText).filter(Boolean);
 
       //  前から280文字を切り出し
-      do {
+      while (urlPartition.length > 0) {
         if (
           //  URL部
-          new RegExp(/^https?:\/\/[\w/:%#\$&\?\(\)~\.=\+\-]+$/).test(
-            urlPartition[0]
+          new RegExp(/^https?:\/\/[\w/:%#$&?()~.=+-]+$/).test(
+            urlPartition[0],
           )
         ) {
           if (countGraphemeForTwitter(textPartition + urlPartition[0]) < 280)
@@ -189,7 +282,7 @@ export class Twitter {
           //  文字数が0なら分割の先頭を消す
           if (segments.length === 0) urlPartition.shift();
         }
-      } while (urlPartition.length > 0);
+      };
 
       //  残りの文字列を決定
       postingText = urlPartition.join('');
@@ -201,11 +294,17 @@ export class Twitter {
         body.reply = {
           in_reply_to_tweet_id: prevTweetId,
         };
+      if (mediaIds.length > 0)
+        body.media = {
+          media_ids: mediaIds.splice(0, 4),
+        };
+
 
       const res = await fetch(target, {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json',
+          'Content-Type': 'application/json;charset=utf-8',
+          'Accept-Encoding': 'br',
           Authorization: oauthHeader.Authorization,
         },
         body: JSON.stringify(body),
@@ -221,7 +320,7 @@ export class Twitter {
 
       //  残った文字列の長さ
       textLenght = countGraphemeForTwitter(postingText);
-    } while (textLenght > 0);
+    } while (textLenght > 0 || mediaIds.length > 0);
 
     return true;
   }
@@ -240,11 +339,11 @@ export class Twitter {
 
     const signature = this.token
       ? oauth.authorize(
-          { url: url, method: method },
-          { key: this.token.accessToken, secret: this.token.accessSecret }
-        )
+        { url: url, method: method },
+        { key: this.token.accessToken, secret: this.token.accessSecret },
+      )
       : oauth.authorize({ url: url, method: method });
-    const header: { Authorization: string } = oauth.toHeader(signature);
+    const header: { Authorization: string; } = oauth.toHeader(signature);
 
     return header;
   }

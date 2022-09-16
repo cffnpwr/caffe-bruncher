@@ -6,7 +6,7 @@ export const countGraphemeForTwitter = (str: string) => {
   const partition = devideString(str);
 
   return partition.reduce((count: number, text: string): number => {
-    if (new RegExp(/^https?:\/\/[\w/:%#\$&\?\(\)~\.=\+\-]+$/).test(text)) {
+    if (new RegExp(/^https?:\/\/[\w/:%#$&?()~.=+-]+$/).test(text)) {
       return count + 23;
     } else {
       return (
@@ -33,4 +33,4 @@ export const countGraphemeForTwitter = (str: string) => {
 };
 
 export const devideString = (str: string) =>
-  str.split(/(https?:\/\/[\w/:%#\$&\?\(\)~\.=\+\-]+)/);
+  str.split(/(https?:\/\/[\w/:%#$&?()~.=+-]+)/);

@@ -22,7 +22,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     const body = req.body;
     const misskey = new Misskey(
       { misskeyToken: JSON.stringify(body) },
-      body.mkInstance
+      body.mkInstance,
     );
     const isValid = await misskey.validateToken();
     const status = isValid.status;

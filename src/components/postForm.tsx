@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import ImageComp from 'next/image';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { mkValidationState, twValidationState } from '@/src/stores/login';
 import { postingContentState } from '../stores/postForm';
@@ -8,7 +9,10 @@ import {
   Avatar,
   Badge,
   Box,
+  Button,
+  Container,
   Divider,
+  Fade,
   FormControlLabel,
   Grid,
   IconButton,
@@ -16,10 +20,13 @@ import {
   ListItemText,
   Menu,
   MenuItem,
+  Modal,
+  Paper,
   Snackbar,
   Switch,
   TextField,
   Tooltip,
+  Typography,
 } from '@mui/material';
 import {
   Send,
@@ -33,6 +40,8 @@ import {
   Lock,
   CloudOff,
   Cloud,
+  ClosedCaption,
+  Cancel,
 } from '@mui/icons-material';
 import { LoadingButton } from '@mui/lab';
 import locales from '@/src/locale';
@@ -46,6 +55,7 @@ const PostForm = () => {
     useRecoilState(postingContentState);
 
   const [canPosting, setCanPosting] = useState<boolean>(false);
+  const [canTyping, setCanTyping] = useState<boolean>(true);
   const [useCW, setUseCW] = useState<boolean>(false);
 
   const twIconUrl = twVState.data.profile_image_url;
@@ -55,7 +65,7 @@ const PostForm = () => {
   const mkIsLogin = mkVState.isLogin;
 
   const [visibilityAnchor, setVisibilityAnchor] = useState<null | HTMLElement>(
-    null
+    null,
   );
 
   const [openSnackbar, setOpenSnackbar] = useState<boolean>(false);
@@ -66,15 +76,25 @@ const PostForm = () => {
 
   const [useCjp, setUseCjp] = useState<boolean>(false);
 
+  const [previewImages, setPreviewImages] = useState<PostingFileProps[]>([]);
+  const [imageSettingAnchor, setImageSettingAnchor] =
+    useState<null | HTMLElement>(null);
+  const [currentImageIndex, setCurrentImageIndex] = useState<null | number>(
+    null,
+  );
+
+  const [imageCaptionOpen, setImageCaptionOpen] = useState<boolean>(false);
+  const [imageCaption, setImageCaption] = useState<string>('');
+
   useEffect(() => {
     setCanPosting(Boolean(twIsLogin) && Boolean(mkIsLogin));
   }, [setCanPosting, twIsLogin, mkIsLogin]);
 
   const onChangePostingText = (
-    event: React.ChangeEvent<HTMLTextAreaElement>
+    event: React.ChangeEvent<HTMLTextAreaElement>,
   ): void => {
     const content: MisskeyPostingContentProps = JSON.parse(
-      JSON.stringify(postingContent)
+      JSON.stringify(postingContent),
     );
     content.text = event.target.value;
 
@@ -83,7 +103,7 @@ const PostForm = () => {
 
   const onChangeCW = (event: React.ChangeEvent<HTMLInputElement>): void => {
     const content: MisskeyPostingContentProps = JSON.parse(
-      JSON.stringify(postingContent)
+      JSON.stringify(postingContent),
     );
     content.cw = event.target.value;
 
@@ -92,7 +112,7 @@ const PostForm = () => {
 
   const setVisibility = (visibility: 'public' | 'home' | 'followers'): void => {
     const content: MisskeyPostingContentProps = JSON.parse(
-      JSON.stringify(postingContent)
+      JSON.stringify(postingContent),
     );
     content.visibility = visibility;
 
@@ -101,7 +121,7 @@ const PostForm = () => {
   };
 
   const onKeyDown = async (
-    event: React.KeyboardEvent<HTMLDivElement>
+    event: React.KeyboardEvent<HTMLDivElement>,
   ): Promise<void> => {
     if (event.key == 'Enter' && event.ctrlKey) await submit();
   };
@@ -112,7 +132,7 @@ const PostForm = () => {
 
   const toggleLocalOnly = () => {
     const content: MisskeyPostingContentProps = JSON.parse(
-      JSON.stringify(postingContent)
+      JSON.stringify(postingContent),
     );
     content.localOnly = !content.localOnly;
 
@@ -121,18 +141,60 @@ const PostForm = () => {
 
   const closeSnackbar = (
     event?: React.SyntheticEvent | Event,
-    reason?: string
+    reason?: string,
   ) => {
     if (reason === 'clickaway') return;
 
     setOpenSnackbar(false);
   };
 
-  const submit = async () => {
-    if (!canPosting || !postingContent.text) return;
+  const onFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const files = event.target.files;
+    if (!files || files.length === 0) return;
 
-    const content: MisskeyPostingContentProps = JSON.parse(
-      JSON.stringify(postingContent)
+    const previewURLs = [...previewImages];
+    for (const file of files)
+      if (previewURLs.length < 16)
+        previewURLs.push({ file: file, URL: URL.createObjectURL(file) });
+
+    setPreviewImages(previewURLs);
+  };
+
+  const cancelFileUpload = (index: number) => {
+    const previewURLs = [...previewImages];
+    previewURLs.splice(index, 1);
+
+    setPreviewImages(previewURLs);
+    setImageSettingAnchor(null);
+    setCurrentImageIndex(null);
+  };
+
+  const onChangeCaption = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    const text = e.target.value;
+    if (countGrapheme(text) > 512) return;
+
+    setImageCaption(text);
+  };
+
+  const setCaption = (index: number) => {
+    const previewURLs = [...previewImages];
+    previewURLs[index].caption = imageCaption;
+
+    setPreviewImages(previewURLs);
+  };
+
+  const toggleSensitive = (index: number) => {
+    const previewURLs = [...previewImages];
+    previewURLs[index].isSensitive = !previewURLs[index].isSensitive;
+
+    setPreviewImages(previewURLs);
+  };
+
+  const submit = async () => {
+    if (!canPosting || (!postingContent.text && !previewImages.length)) return;
+
+    const content: PostingContentProps = JSON.parse(
+      JSON.stringify(postingContent),
     );
     if (useCW) {
       if (!postingContent.cw) content.cw = '';
@@ -147,6 +209,29 @@ const PostForm = () => {
     }
 
     setCanPosting(false);
+    setCanTyping(false);
+    if (previewImages.length) {
+      const fileData = new FormData();
+      const fileInfos: { caption: string; isSensitive: boolean; }[] = [];
+      for (const key in previewImages) {
+        const image = previewImages[key];
+        fileData.append(key, image.file);
+
+        fileInfos[key] = {
+          caption: image.caption || '',
+          isSensitive: image.isSensitive || false,
+        };
+      }
+      fileData.set('info', JSON.stringify(fileInfos));
+
+      const fileRes = await fetch('/api/medias', {
+        method: 'POST',
+        body: fileData,
+      });
+      const fileIds: { twMediaIds: string[], mkFileIds: string[]; } = await fileRes.json();
+      content.fileIds = fileIds;
+    }
+
     const res = await fetch('/api/posts', {
       method: 'POST',
       headers: {
@@ -178,6 +263,7 @@ const PostForm = () => {
       setOpenSnackbar(true);
 
       setCanPosting(true);
+      setCanTyping(true);
 
       return;
     }
@@ -187,7 +273,9 @@ const PostForm = () => {
       visibility: postingContent.visibility,
       cw: postingContent.cw,
     });
+    setPreviewImages([]);
     setCanPosting(true);
+    setCanTyping(true);
 
     return;
   };
@@ -252,7 +340,7 @@ const PostForm = () => {
               {countGraphemeForTwitter(
                 useCjp && locale === 'ja-sus'
                   ? generate(postingContent.text)
-                  : postingContent.text
+                  : postingContent.text,
               )}
             </Grid>
             <Grid
@@ -273,7 +361,7 @@ const PostForm = () => {
               {countGrapheme(
                 useCjp && locale === 'ja-sus'
                   ? generate(postingContent.text)
-                  : postingContent.text
+                  : postingContent.text,
               )}
             </Grid>
             <Grid
@@ -403,7 +491,7 @@ const PostForm = () => {
           multiline
           rows={10}
           value={postingContent.text}
-          disabled={!canPosting}
+          disabled={!canTyping}
           onChange={onChangePostingText}
           onKeyDown={onKeyDown}
           placeholder={localeObj.postForm.textarea}
@@ -414,6 +502,129 @@ const PostForm = () => {
             py: '1em',
           }}
         />
+      </Box>
+      <Box sx={{ display: 'flex' }}>
+        {previewImages.map((image, index) => (
+          <Box key={index}>
+            <ImageComp
+              src={image.URL}
+              id={index.toString()}
+              key={index}
+              width='48px'
+              height='48px'
+              objectFit='contain'
+              onClick={(e) => {
+                setImageSettingAnchor(e.currentTarget);
+                setCurrentImageIndex(index);
+              }}
+            />
+            <Menu
+              anchorEl={imageSettingAnchor}
+              open={index === currentImageIndex}
+              onClose={() => {
+                setImageSettingAnchor(null);
+                setCurrentImageIndex(null);
+              }}
+            >
+              <MenuItem
+                onClick={() => {
+                  setImageCaption(previewImages[index].caption || '');
+                  setImageCaptionOpen(true);
+                }}
+              >
+                <ClosedCaption sx={{ mr: 2 }} />
+                <Typography color='primary'>キャプションを追加</Typography>
+              </MenuItem>
+              <MenuItem onClick={() => toggleSensitive(index)}>
+                {previewImages[index].isSensitive ? (
+                  <VisibilityOff sx={{ mr: 2 }} />
+                ) : (
+                  <Visibility sx={{ mr: 2 }} />
+                )}
+                <Typography color='primary'>閲覧注意</Typography>
+              </MenuItem>
+              <MenuItem onClick={() => cancelFileUpload(index)}>
+                <Cancel sx={{ mr: 2 }} />
+                <Typography color='primary'>添付取り消し</Typography>
+              </MenuItem>
+            </Menu>
+            <Modal
+              open={index === currentImageIndex && imageCaptionOpen}
+              onClose={() => setImageCaptionOpen(false)}
+            >
+              <Fade in={index === currentImageIndex && imageCaptionOpen}>
+                <Container
+                  component='main'
+                  sx={{
+                    position: 'absolute',
+                    top: '50%',
+                    left: '50%',
+                    transform: 'translate(-50%, -50%)',
+                    maxWidth: { xs: '100%', md: '520px' },
+                  }}
+                >
+                  <Paper>
+                    <Box
+                      sx={{
+                        p: 4,
+                        display: 'flex',
+                        flexDirection: 'column',
+                        justifyContent: 'center',
+                        alignItems: 'center ',
+                        height: 'auto',
+                      }}
+                    >
+                      <Typography variant='h5'>キャプションを追加</Typography>
+                      <TextField
+                        multiline
+                        rows={5}
+                        placeholder='キャプションを追加'
+                        onChange={onChangeCaption}
+                        value={imageCaption}
+                        sx={{
+                          height: '100%',
+                          width: '100%',
+                          resize: 'none',
+                          py: '1em',
+                          m: 2,
+                        }}
+                      />
+                      <Box
+                        sx={{
+                          display: 'flex',
+                          justifyContent: 'space-around',
+                          alignItems: 'center ',
+                          width: 'max-content',
+                        }}
+                      >
+                        <Button
+                          variant='contained'
+                          sx={{ minWidth: '100px', px: 2, mx: 1 }}
+                          onClick={() => {
+                            setCaption(index);
+                            setImageCaptionOpen(false);
+                          }}
+                        >
+                          OK
+                        </Button>
+                        <Button
+                          variant='outlined'
+                          sx={{ minWidth: '100px', px: 2, mx: 1 }}
+                          onClick={() => {
+                            setImageCaption('');
+                            setImageCaptionOpen(false);
+                          }}
+                        >
+                          キャンセル
+                        </Button>
+                      </Box>
+                    </Box>
+                  </Paper>
+                </Container>
+              </Fade>
+            </Modal>
+          </Box>
+        ))}
       </Box>
       <Box
         component='footer'
@@ -426,12 +637,25 @@ const PostForm = () => {
       >
         <Box>
           <Tooltip title={localeObj.tooltip.image}>
-            <IconButton aria-label='image' color='primary' size='large'>
+            <IconButton
+              aria-label='image'
+              color='primary'
+              size='large'
+              component='label'
+              disabled={!canTyping}
+            >
+              <input
+                hidden
+                accept='image/*'
+                type='file'
+                multiple
+                onChange={onFileUpload}
+              />
               <Image />
             </IconButton>
           </Tooltip>
           <Tooltip title={localeObj.tooltip.poll}>
-            <IconButton aria-label='poll' color='primary' size='large'>
+            <IconButton aria-label='poll' color='primary' size='large' disabled={!canTyping}>
               <Leaderboard />
             </IconButton>
           </Tooltip>
@@ -441,12 +665,13 @@ const PostForm = () => {
               color='primary'
               size='large'
               onClick={toggleCW}
+              disabled={!canTyping}
             >
               {useCW ? <VisibilityOff /> : <Visibility />}
             </IconButton>
           </Tooltip>
           <Tooltip title={localeObj.tooltip.emoji}>
-            <IconButton aria-label='emojis' color='primary' size='large'>
+            <IconButton aria-label='emojis' color='primary' size='large' disabled={!canTyping}>
               <TagFacesRounded />
             </IconButton>
           </Tooltip>

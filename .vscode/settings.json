@@ -1,14 +1,14 @@
 {
     "typescript.updateImportsOnFileMove.enabled": "always",
     "[typescript]": {
-        "editor.defaultFormatter": "esbenp.prettier-vscode",
+        "editor.defaultFormatter": "vscode.typescript-language-features",
         "editor.tabSize": 2,
         "editor.insertSpaces": true
     },
     "typescript.format.semicolons": "insert",
     "javascript.format.semicolons": "insert",
     "[typescriptreact]": {
-        "editor.defaultFormatter": "esbenp.prettier-vscode",
+        "editor.defaultFormatter": "vscode.typescript-language-features",
         "editor.tabSize": 2,
         "editor.insertSpaces": true
     },
