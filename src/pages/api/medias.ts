@@ -74,72 +74,11 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         return;
       }
 
-      // console.log(fields);
-      // console.log(files);
-
       res.status(201).json({
         twMediaIds: twMediaIds,
         mkFileIds: mkFileIds,
       });
     });
-
-    // const bb = busboy({ headers: req.headers });
-    // let twitter: Twitter;
-    // let misskey: Misskey;
-    // let fileCount: number = 9999;
-    // const twMediaIds: string[] = [];
-
-    // res.status(500);
-
-    // bb.on('field', (name, value, info) => {
-    //   const body = JSON.parse(value);
-    //   fileCount = body.length;
-    //   twitter = new Twitter({
-    //     ...{ twitterToken: JSON.stringify(body.twitterToken) },
-    //     ...cookies,
-    //   });
-    //   misskey = new Misskey(
-    //     { ...{ misskeyToken: JSON.stringify(body.misskeyToken) }, ...cookies },
-    //     body.mkInstance
-    //   );
-
-    //   console.log(fileCount);
-    // })
-    //   .on('file', (name, stream, info) => {
-    //     const { mimeType } = info;
-    //     let file: Buffer = Buffer.alloc(0);
-    //     stream
-    //       .on('data', (chunk) => {
-    //         file = Buffer.concat([file, Buffer.from(chunk)]);
-    //       })
-    //       .once('end', async () => {
-    //         console.log(Boolean(twitter), fileCount, file);
-
-    //         if (!twitter) return;
-    //         const mediaId: string = await twitter.uploadMediaInit(
-    //           file.byteLength,
-    //           mimeType
-    //         );
-
-    //         if (
-    //           mediaId &&
-    //           (await twitter.uploadMediaAppend(mediaId, file)) &&
-    //           (await twitter.uploadMediaFinalize(mediaId))
-    //         ) {
-    //           twMediaIds.push(mediaId);
-    //         }
-    //         fileCount--;
-
-    //         // console.log('onceend', fileCount, twMediaIds);
-    //         return;
-    //       });
-    //   })
-    //   .once('close', () => {});
-    // req.pipe(bb);
-
-    // res.status(201).json({
-    //   mediaId: twMediaIds,
-    // });
 
     return;
   }

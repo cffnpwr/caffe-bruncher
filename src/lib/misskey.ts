@@ -1,3 +1,7 @@
+import { ReadStream } from 'node:fs';
+
+import { fetch, FormData } from 'undici';
+
 export class Misskey {
   //  app secret
   private appSecret = '';
@@ -62,7 +66,7 @@ export class Misskey {
         body: '{}',
       },
     )
-      .then((res) => res.json())
+      .then((res) => res.json() as any)
       .then((data) => (data.pong > 0 ? true : false))
       .catch(() => false);
 
@@ -84,7 +88,7 @@ export class Misskey {
               callback || (callback === null ? null : this.callbackUrl),
           }),
         })
-      ).json()
+      ).json() as any
     ).secret;
 
     //  get auth url
@@ -100,7 +104,7 @@ export class Misskey {
         }),
       });
       if (res.status !== 200) return '';
-      const url: string = (await res.json())['url'] || '';
+      const url: string = (await res.json() as any)['url'] || '';
 
       return {
         secret: this.appSecret,
@@ -135,7 +139,7 @@ export class Misskey {
     });
     if (res.status !== 200) return result;
 
-    const resToken = await res.json();
+    const resToken = await res.json() as any;
     result.accessToken = resToken.accessToken;
     result.accountId = resToken.user.id;
 
@@ -173,7 +177,7 @@ export class Misskey {
     });
     let data;
     try {
-      data = await res.json();
+      data = await res.json() as any;
     } catch (error) {
       console.error(error);
     }
@@ -211,19 +215,24 @@ export class Misskey {
       if (option.isSensitive) formData.append('isSensitive', option.isSensitive ? 'true' : 'false');
     }
 
+
     const res = await fetch(target, {
       method: 'POST',
       body: formData,
     });
     if (res.status !== 200) {
       console.error('error status: ', res.status);
-      console.error('error msg: ', await res.json());
+      try {
+        console.error('error msg: ', await res.json());
+      } catch (error) {
+        console.error('error msg: ', await res.text());
+      }
       console.error('req body: ', formData);
 
       return '';
     }
 
-    const id = (await res.json()).id || '';
+    const id = (await res.json() as any).id || '';
 
     return id;
   }

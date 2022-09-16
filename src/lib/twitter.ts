@@ -1,7 +1,9 @@
 import crypto from 'node:crypto';
+import { ReadStream } from 'node:fs';
 
 import OAuth from 'oauth-1.0a';
 import { toArray } from 'stringz';
+import { fetch, FormData } from 'undici';
 
 import { countGraphemeForTwitter, devideString } from './utils';
 
@@ -124,7 +126,7 @@ export class Twitter {
       method: 'GET',
       headers: oauthHeader,
     });
-    const data = (await res.json()).data;
+    const data = (await res.json() as any).data;
     if (res.status !== 200) {
       result.status = res.status;
       result.data = data;
@@ -171,7 +173,7 @@ export class Twitter {
 
       return '';
     }
-    const mediaId = (await res.json()).media_id_string as string;
+    const mediaId = (await res.json() as any).media_id_string as string;
 
     return mediaId;
   }
@@ -194,7 +196,7 @@ export class Twitter {
       headers: {
         Authorization: oauthHeader.Authorization,
       },
-      body: body,
+      body: body as unknown as URLSearchParams,
     });
     if (res.status !== 204) {
       console.log('append');
@@ -319,7 +321,7 @@ export class Twitter {
 
         return false;
       }
-      prevTweetId = (await res.json()).data.id;
+      prevTweetId = (await res.json() as any).data.id;
 
       //  残った文字列の長さ
       textLenght = countGraphemeForTwitter(postingText);
