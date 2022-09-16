@@ -1,6 +1,7 @@
-import { ReadStream } from 'node:fs';
+import { Blob } from 'node:buffer';
 
 import { fetch, FormData } from 'undici';
+
 
 export class Misskey {
   //  app secret
@@ -209,7 +210,7 @@ export class Misskey {
     const target = `https://${this.instance}/api/drive/files/create`;
     const formData = new FormData();
     formData.append('i', this.token.accessToken);
-    formData.append('file', new Blob([file.buffer]));
+    formData.append('file', new Blob([file]));
     if (option) {
       if (option.comment) formData.append('comment', option.comment);
       if (option.isSensitive) formData.append('isSensitive', option.isSensitive ? 'true' : 'false');

@@ -1,5 +1,5 @@
+import { Blob, Buffer } from 'node:buffer';
 import crypto from 'node:crypto';
-import { ReadStream } from 'node:fs';
 
 import OAuth from 'oauth-1.0a';
 import { toArray } from 'stringz';
@@ -189,7 +189,7 @@ export class Twitter {
     )}&segment_index=0`;
     const oauthHeader = this.getOAuthHeader(target, 'POST');
     const body = new FormData();
-    body.append('media', new Blob([file.buffer]));
+    body.append('media', new Blob([file]));
 
     const res = await fetch(target, {
       method: 'POST',
