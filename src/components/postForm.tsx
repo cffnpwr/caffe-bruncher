@@ -1,7 +1,7 @@
 import {
   Send,
   Public,
-  Image,
+  Image as ImageIcon,
   Visibility,
   VisibilityOff,
   Leaderboard,
@@ -39,7 +39,7 @@ import {
   Typography,
 } from '@mui/material';
 import { generate } from 'cjp';
-import ImageComp from 'next/image';
+import Image from 'next/image';
 import React, { useEffect, useState } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
 
@@ -49,8 +49,6 @@ import { mkValidationState, twValidationState } from '@/src/stores/login';
 
 import { localeState } from '../stores/locale';
 import { postingContentState } from '../stores/postForm';
-
-
 
 
 const PostForm = () => {
@@ -162,12 +160,16 @@ const PostForm = () => {
       if (previewURLs.length < 16)
         previewURLs.push({ file: file, URL: URL.createObjectURL(file) });
 
+    event.target.value = '';
+    console.log(previewURLs);
     setPreviewImages(previewURLs);
   };
 
   const cancelFileUpload = (index: number) => {
     const previewURLs = [...previewImages];
-    previewURLs.splice(index, 1);
+    const revokingImages = previewURLs.splice(index, 1);
+
+    URL.revokeObjectURL(revokingImages[0].URL);
 
     setPreviewImages(previewURLs);
     setImageSettingAnchor(null);
@@ -235,6 +237,10 @@ const PostForm = () => {
       });
       const fileIds: { twMediaIds: string[], mkFileIds: string[]; } = await fileRes.json();
       content.fileIds = fileIds;
+
+      //  revoke blobs
+      for (const image of previewImages)
+        URL.revokeObjectURL(image.URL);
     }
 
     const res = await fetch('/api/posts', {
@@ -276,6 +282,7 @@ const PostForm = () => {
     setPostingContent({
       text: '',
       visibility: postingContent.visibility,
+      localOnly: postingContent.localOnly,
       cw: postingContent.cw,
     });
     setPreviewImages([]);
@@ -511,7 +518,7 @@ const PostForm = () => {
       <Box sx={{ display: 'flex' }}>
         {previewImages.map((image, index) => (
           <Box key={index}>
-            <ImageComp
+            <Image
               src={image.URL}
               id={index.toString()}
               key={index}
@@ -522,6 +529,7 @@ const PostForm = () => {
                 setImageSettingAnchor(e.currentTarget);
                 setCurrentImageIndex(index);
               }}
+              alt='uploaded image'
             />
             <Menu
               anchorEl={imageSettingAnchor}
@@ -656,7 +664,7 @@ const PostForm = () => {
                 multiple
                 onChange={onFileUpload}
               />
-              <Image />
+              <ImageIcon />
             </IconButton>
           </Tooltip>
           <Tooltip title={localeObj.tooltip.poll}>
