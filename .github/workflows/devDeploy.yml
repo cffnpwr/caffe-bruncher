@@ -21,6 +21,8 @@ jobs:
     steps:
       - name: checkout
         uses: actions/checkout@v3
+      - name: Yarn install
+        run: yarn install
       - name: Run eslint
         run: yarn lint --fix
       - name: deploy to vercel
