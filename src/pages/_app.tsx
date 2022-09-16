@@ -1,12 +1,15 @@
-import createEmotionCache from '@/src/lib/createEmotionCache';
 import { CacheProvider, EmotionCache } from '@emotion/react';
 import CssBaseline from '@mui/material/CssBaseline';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import type { AppProps } from 'next/app';
 import Head from 'next/head';
 import { useEffect, useState } from 'react';
 import { RecoilRoot } from 'recoil';
+
+import createEmotionCache from '@/src/lib/createEmotionCache';
+
 import CaffeBruncherHeader from '../components/header';
+
+import type { AppProps } from 'next/app';
 
 const clientSideEmotionCache = createEmotionCache();
 interface MyAppProps extends AppProps {

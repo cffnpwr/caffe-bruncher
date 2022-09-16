@@ -1,6 +1,8 @@
-import type { NextApiRequest, NextApiResponse } from 'next';
-import { Misskey } from '@/src/lib/misskey';
 import { parseCookies, destroyCookie } from 'nookies';
+
+import { Misskey } from '@/src/lib/misskey';
+
+import type { NextApiRequest, NextApiResponse } from 'next';
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   const method = req.method;

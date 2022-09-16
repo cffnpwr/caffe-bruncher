@@ -1,12 +1,14 @@
-import Router from 'next/router';
-import { twValidationState } from '../stores/login';
-import { useRecoilValue } from 'recoil';
-import { useTwLoginStatus } from '../stores/swr';
+import { Twitter } from '@mui/icons-material';
 import LoadingButton from '@mui/lab/LoadingButton';
 import { Box, Typography } from '@mui/material';
-import { Twitter } from '@mui/icons-material';
+import Router from 'next/router';
+import { useRecoilValue } from 'recoil';
+
+
 import locales from '../locale';
 import { localeState } from '../stores/locale';
+import { twValidationState } from '../stores/login';
+import { useTwLoginStatus } from '../stores/swr';
 
 const TwitterLogin = () => {
   const { isValidating, mutate } = useTwLoginStatus();
@@ -28,7 +30,7 @@ const TwitterLogin = () => {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json;charset=utf-8',
-        }
+        },
       });
       const oauthToken = (await res.json())['oauth_token'] || '';
 

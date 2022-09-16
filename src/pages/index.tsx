@@ -1,11 +1,13 @@
-import { useRecoilValue } from 'recoil';
-import PostForm from '@/src/components/postForm';
-import { mkValidationState, twValidationState } from '@/src/stores/login';
 import { Box, Container, Paper } from '@mui/material';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
-import CheckLogin from '../components/checkLogin';
+import { useRecoilValue } from 'recoil';
+
+import PostForm from '@/src/components/postForm';
+import { mkValidationState, twValidationState } from '@/src/stores/login';
+
 import CaffeBruncherTitle from '../components/caffeBruncherTitle';
+import CheckLogin from '../components/checkLogin';
 
 const Home = () => {
   const twVState = useRecoilValue(twValidationState);

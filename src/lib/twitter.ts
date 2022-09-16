@@ -1,7 +1,10 @@
-import OAuth from 'oauth-1.0a';
 import crypto from 'node:crypto';
-import { countGraphemeForTwitter, devideString } from './utils';
+
+import OAuth from 'oauth-1.0a';
 import { toArray } from 'stringz';
+
+import { countGraphemeForTwitter, devideString } from './utils';
+
 
 export class Twitter {
   //  consumer keys
@@ -282,7 +285,7 @@ export class Twitter {
           //  文字数が0なら分割の先頭を消す
           if (segments.length === 0) urlPartition.shift();
         }
-      };
+      }
 
       //  残りの文字列を決定
       postingText = urlPartition.join('');

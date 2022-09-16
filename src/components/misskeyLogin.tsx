@@ -4,10 +4,11 @@ import TextField from '@mui/material/TextField';
 import Router from 'next/router';
 import React, { useState } from 'react';
 import { useRecoilValue } from 'recoil';
+
+import locales from '../locale';
 import { localeState } from '../stores/locale';
 import { mkValidationState } from '../stores/login';
 import { useMkLoginStatus } from '../stores/swr';
-import locales from '../locale';
 
 const MisskeyLogin = () => {
   const vState = useRecoilValue(mkValidationState);
@@ -52,7 +53,7 @@ const MisskeyLogin = () => {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json;charset=utf-8',
-        }
+        },
       });
       if (res.status !== 200) {
         setOpenSnackbar(true);

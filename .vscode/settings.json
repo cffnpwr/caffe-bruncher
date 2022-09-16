@@ -3,13 +3,21 @@
     "[typescript]": {
         "editor.defaultFormatter": "vscode.typescript-language-features",
         "editor.tabSize": 2,
-        "editor.insertSpaces": true
+        "editor.insertSpaces": true,
+        "editor.codeActionsOnSave": {
+            "source.fixAll.eslint": true,
+        },
+        "editor.formatOnSave": false
     },
     "typescript.format.semicolons": "insert",
     "javascript.format.semicolons": "insert",
     "[typescriptreact]": {
         "editor.defaultFormatter": "vscode.typescript-language-features",
         "editor.tabSize": 2,
-        "editor.insertSpaces": true
+        "editor.insertSpaces": true,
+        "editor.codeActionsOnSave": {
+            "source.fixAll.eslint": true,
+        },
+        "editor.formatOnSave": false
     },
 }

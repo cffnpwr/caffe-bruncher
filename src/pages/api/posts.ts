@@ -1,8 +1,9 @@
+import { NextApiRequest, NextApiResponse } from 'next';
+import { parseCookies } from 'nookies';
+
 import { Misskey } from '@/src/lib/misskey';
 import { Twitter } from '@/src/lib/twitter';
 import { countGrapheme } from '@/src/lib/utils';
-import { NextApiRequest, NextApiResponse } from 'next';
-import { parseCookies } from 'nookies';
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   if (req.method === 'POST') {

@@ -1,6 +1,7 @@
-import { Misskey } from '@/src/lib/misskey';
 import { NextApiRequest, NextApiResponse } from 'next';
 import { destroyCookie, parseCookies, setCookie } from 'nookies';
+
+import { Misskey } from '@/src/lib/misskey';
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   const method = req.method;
