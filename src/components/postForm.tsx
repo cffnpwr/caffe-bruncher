@@ -161,7 +161,6 @@ const PostForm = () => {
         previewURLs.push({ file: file, URL: URL.createObjectURL(file) });
 
     event.target.value = '';
-    console.log(previewURLs);
     setPreviewImages(previewURLs);
   };
 
