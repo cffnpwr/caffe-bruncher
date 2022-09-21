@@ -1,4 +1,5 @@
 import { Box, Container, Paper } from '@mui/material';
+import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
 import { useRecoilValue } from 'recoil';
@@ -29,6 +30,9 @@ const Home = () => {
 
   return (
     <>
+      <Head>
+        <title>CaffeBruncher</title>
+      </Head>
       <Box
         component='div'
         sx={{

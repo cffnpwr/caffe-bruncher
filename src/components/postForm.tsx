@@ -1,17 +1,17 @@
 import {
-  Send,
-  Public,
+  Cancel,
+  ClosedCaption,
+  Cloud,
+  CloudOff,
+  Home,
   Image as ImageIcon,
+  Leaderboard,
+  Lock,
+  Public,
+  Send,
+  TagFacesRounded,
   Visibility,
   VisibilityOff,
-  Leaderboard,
-  TagFacesRounded,
-  Home,
-  Lock,
-  CloudOff,
-  Cloud,
-  ClosedCaption,
-  Cancel,
 } from '@mui/icons-material';
 import { LoadingButton } from '@mui/lab';
 import {
@@ -151,17 +151,26 @@ const PostForm = () => {
     setOpenSnackbar(false);
   };
 
+  const addFiles = (files: FileList) => {
+    const previewURLs = [...previewImages];
+    for (const file of files)
+      if (previewURLs.length < 16 && 
+        (file.type === 'image/jpeg' || 
+        file.type === 'image/png' || 
+        file.type === 'image/gif' || 
+        file.type === 'image/webp'))
+        previewURLs.push({ file: file, URL: URL.createObjectURL(file) });
+
+    setPreviewImages(previewURLs);
+  };
+
   const onFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const files = event.target.files;
     if (!files || files.length === 0) return;
 
-    const previewURLs = [...previewImages];
-    for (const file of files)
-      if (previewURLs.length < 16)
-        previewURLs.push({ file: file, URL: URL.createObjectURL(file) });
+    addFiles(files);
 
     event.target.value = '';
-    setPreviewImages(previewURLs);
   };
 
   const cancelFileUpload = (index: number) => {
@@ -173,6 +182,13 @@ const PostForm = () => {
     setPreviewImages(previewURLs);
     setImageSettingAnchor(null);
     setCurrentImageIndex(null);
+  };
+
+  const onPasteFile = (event: React.ClipboardEvent<HTMLDivElement>) => {
+    const files = event.clipboardData.files;
+    if(!files.length) return;
+
+    addFiles(files);
   };
 
   const onChangeCaption = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -505,6 +521,7 @@ const PostForm = () => {
           disabled={!canTyping}
           onChange={onChangePostingText}
           onKeyDown={onKeyDown}
+          onPaste={onPasteFile}
           placeholder={localeObj.postForm.textarea}
           sx={{
             height: '100%',
@@ -658,7 +675,7 @@ const PostForm = () => {
             >
               <input
                 hidden
-                accept='image/*'
+                accept='image/png, image/jpeg, image/gif, image/webp'
                 type='file'
                 multiple
                 onChange={onFileUpload}

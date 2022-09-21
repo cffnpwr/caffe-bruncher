@@ -1,5 +1,5 @@
 import createEmotionServer from '@emotion/server/create-instance';
-import Document, { Html, Head, Main, NextScript } from 'next/document';
+import Document, { Head, Html, Main, NextScript } from 'next/document';
 
 import createEmotionCache from '@/src/lib/createEmotionCache';
 
@@ -10,7 +10,20 @@ export default class MyDocument extends Document {
     return (
       <Html>
         <Head>
+          <meta
+            name='description'
+            content='CaffeBruncher is tools to post to Twitter and Misskey at the same time.'
+          />
+          <meta name='viewport' content='initial-scale=1, width=device-width' />
+
+          <link rel="apple-touch-icon" sizes="180x180" href="/favicon/apple-touch-icon.png" />
+          <link rel="icon" type="image/png" sizes="32x32" href="/favicon/favicon-32x32.png" />
+          <link rel="icon" type="image/png" sizes="16x16" href="/favicon/favicon-16x16.png" />
+          <link rel="manifest" href="/favicon/site.webmanifest" />
+          <link rel="mask-icon" href="/favicon/safari-pinned-tab.svg" color={theme.palette.primary.main} />
+          <meta name="msapplication-TileColor" content={theme.palette.primary.main} />
           <meta name='theme-color' content={theme.palette.primary.main} />
+
           <link rel='preconnect' href='https://fonts.googleapis.com' />
           <link
             rel='preconnect'

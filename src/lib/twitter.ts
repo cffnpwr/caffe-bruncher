@@ -3,7 +3,7 @@ import crypto from 'node:crypto';
 
 import OAuth from 'oauth-1.0a';
 import { toArray } from 'stringz';
-import { fetch, FormData } from 'undici';
+import { FormData, fetch } from 'undici';
 
 import { countGraphemeForTwitter, devideString } from './utils';
 

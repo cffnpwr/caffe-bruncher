@@ -1,6 +1,6 @@
 import fs from 'node:fs';
 
-import { formidable, File as FFile } from 'formidable';
+import { File as FFile, formidable } from 'formidable';
 import { NextApiRequest, NextApiResponse } from 'next';
 import { parseCookies } from 'nookies';
 

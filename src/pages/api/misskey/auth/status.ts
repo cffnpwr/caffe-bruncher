@@ -1,4 +1,4 @@
-import { parseCookies, destroyCookie } from 'nookies';
+import { destroyCookie, parseCookies } from 'nookies';
 
 import { Misskey } from '@/src/lib/misskey';
 

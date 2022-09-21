@@ -1,6 +1,6 @@
 import { Blob } from 'node:buffer';
 
-import { fetch, FormData } from 'undici';
+import { FormData, fetch } from 'undici';
 
 
 export class Misskey {

@@ -1,7 +1,6 @@
 import { CacheProvider, EmotionCache } from '@emotion/react';
 import CssBaseline from '@mui/material/CssBaseline';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
-import Head from 'next/head';
+import { ThemeProvider, createTheme } from '@mui/material/styles';
 import { useEffect, useState } from 'react';
 import { RecoilRoot } from 'recoil';
 
@@ -70,15 +69,6 @@ function MyApp(props: MyAppProps) {
   const { Component, emotionCache = clientSideEmotionCache, pageProps } = props;
   return showScreen ? (
     <CacheProvider value={emotionCache}>
-      <Head>
-        <title>CaffeBruncher</title>
-        <meta
-          name='description'
-          content='CaffeBruncher is tools to post to Twitter and Misskey at the same time.'
-        />
-        <meta name='viewport' content='initial-scale=1, width=device-width' />
-        <link rel='icon' href='/favicon.ico' />
-      </Head>
       <ThemeProvider theme={theme}>
         <CssBaseline />
         <RecoilRoot>

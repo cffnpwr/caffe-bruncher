@@ -17,7 +17,8 @@
   },
   "plugins": [
     "react",
-    "@typescript-eslint"
+    "@typescript-eslint",
+    "unused-imports"
   ],
   "rules": {
     "indent": [
@@ -47,6 +48,18 @@
       "error",
       "always"
     ],
+    "sort-imports": [
+      "error",
+      {
+        "ignoreDeclarationSort": true
+      }
+    ],
+    "@typescript-eslint/ban-ts-comment": [
+      "error",
+      {
+        "ts-ignore": "allow-with-description"
+      }
+    ],
     "import/order": [
       "error",
       {
@@ -71,6 +84,7 @@
           "caseInsensitive": true // 小文字大文字を区別する 
         }
       }
-    ]
+    ],
+    "unused-imports/no-unused-imports": "error"
   }
 }
