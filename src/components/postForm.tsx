@@ -38,6 +38,7 @@ import {
   Tooltip,
   Typography,
 } from '@mui/material';
+import imageCompression from 'browser-image-compression';
 import { generate } from 'cjp';
 import Image from 'next/image';
 import React, { useEffect, useState } from 'react';
@@ -151,15 +152,17 @@ const PostForm = () => {
     setOpenSnackbar(false);
   };
 
-  const addFiles = (files: FileList) => {
+  const addFiles = async (files: FileList) => {
     const previewURLs = [...previewImages];
     for (const file of files)
       if (previewURLs.length < 16 && 
         (file.type === 'image/jpeg' || 
         file.type === 'image/png' || 
         file.type === 'image/gif' || 
-        file.type === 'image/webp'))
-        previewURLs.push({ file: file, URL: URL.createObjectURL(file) });
+        file.type === 'image/webp')){
+        const compressed = file.size >= 5e6 ? await imageCompression(file, { maxSizeMB: 5 }) : file;
+        previewURLs.push({ file: compressed, URL: URL.createObjectURL(compressed) });
+      }
 
     setPreviewImages(previewURLs);
   };

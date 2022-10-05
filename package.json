@@ -15,6 +15,7 @@
     "@mui/icons-material": "^5.8.4",
     "@mui/lab": "^5.0.0-alpha.91",
     "@mui/material": "^5.9.1",
+    "browser-image-compression": "^2.0.0",
     "cjp": "^2.0.3",
     "formidable": "^2.0.1",
     "next": "^12.2.3",
