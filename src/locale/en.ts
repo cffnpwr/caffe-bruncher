@@ -8,6 +8,9 @@ export default {
     language: {
       title: 'Language',
     },
+    about: {
+      title: 'About CaffeBruncher',
+    },
   },
   tooltip: {
     github: 'Github repository',
@@ -50,6 +53,35 @@ export default {
       loginWith: 'Login With Misskey',
       instance: 'Instance name',
       egInstance: 'e.g. misskey.io',
+    },
+  },
+  about: {
+    title: 'About CaffeBruncher',
+    what: {
+      title: 'What is this?',
+      description: 'Tools to post to Twitter and Misskey at the same time.',
+    },
+    history: {
+      title: 'Development history',
+      description: [
+        'I want to post to Twitter and Misskey at the same time.',
+        'I made it.',
+      ],
+    },
+    st: {
+      debuggers: 'Debuggers',
+    },
+    links: {
+      title: 'Links',
+      developer: 'Developer: CaffeinePower',
+      repo: 'CaffeBruncher\'s Repository',
+    },
+    others: {
+      title: 'Others',
+      misskey: [
+        'Misskey logo used under license',
+        '',
+      ],
     },
   },
   error: {

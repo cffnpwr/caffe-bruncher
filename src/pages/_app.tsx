@@ -1,6 +1,7 @@
 import { CacheProvider, EmotionCache } from '@emotion/react';
 import CssBaseline from '@mui/material/CssBaseline';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
+import Head from 'next/head';
 import { useEffect, useState } from 'react';
 import { RecoilRoot } from 'recoil';
 
@@ -72,6 +73,9 @@ function MyApp(props: MyAppProps) {
       <ThemeProvider theme={theme}>
         <CssBaseline />
         <RecoilRoot>
+          <Head>
+            <meta name='viewport' content='initial-scale=1, width=device-width' />
+          </Head>
           <CaffeBruncherHeader />
           <Component {...pageProps} />
         </RecoilRoot>

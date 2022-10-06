@@ -8,6 +8,9 @@ export default {
     language: {
       title: '言语',
     },
+    about: {
+      title: 'CaffeBruncherについて',
+    },
   },
   tooltip: {
     github: 'Github 刂ポヅ卜刂',
@@ -50,6 +53,35 @@ export default {
       loginWith: 'Misskeyて登录',
       instance: '亻ソヌタソヌ名',
       egInstance: '例: misskey.io',
+    },
+  },
+  about: {
+    title: 'CaffeBruncherについて',
+    what: {
+      title: 'これはなに',
+      description: 'CaffeBruncherはTwitterとMisskeyに同时投稿を行なラツー儿てず',
+    },
+    history: {
+      title: '开発経纬',
+      description: [
+        'TwitterとMisskeyに同时に投稿レだい',
+        '作っだっだ',
+      ],
+    },
+    st: {
+      debuggers: '人柱ゐ皆様',
+    },
+    links: {
+      title: '刂ソケ',
+      developer: '开発者: カふぇいんぱわぁ',
+      repo: 'CaffeBruncherゐ刂ポヅ卜刂',
+    },
+    others: {
+      title: 'そゐ他',
+      misskey: [
+        'Misskeyゐロゴは',
+        'ゐう亻乜ソヌに基づいて利用レていまず',
+      ],
     },
   },
   error: {

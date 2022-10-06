@@ -8,6 +8,9 @@ interface Locale {
     language: {
       title: string;
     };
+    about: {
+      title: stirng;
+    };
   };
   tooltip: {
     github: string;
@@ -50,6 +53,35 @@ interface Locale {
       loginWith: string;
       instance: string;
       egInstance: string;
+    };
+  };
+  about: {
+    title: string;
+    what: {
+      title: string;
+      description: string;
+    };
+    history: {
+      title: string;
+      description: [
+        string,
+        string,
+      ];
+    };
+    st: {
+      debuggers: string;
+    };
+    links: {
+      title: string;
+      developer: string;
+      repo: string;
+    };
+    others: {
+      title: string;
+      misskey: [
+        string,
+        string,
+      ];
     };
   };
   error: {

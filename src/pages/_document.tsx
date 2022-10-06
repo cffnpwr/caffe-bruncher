@@ -14,7 +14,6 @@ export default class MyDocument extends Document {
             name='description'
             content='CaffeBruncher is tools to post to Twitter and Misskey at the same time.'
           />
-          <meta name='viewport' content='initial-scale=1, width=device-width' />
 
           <link rel="apple-touch-icon" sizes="180x180" href="/favicon/apple-touch-icon.png" />
           <link rel="icon" type="image/png" sizes="32x32" href="/favicon/favicon-32x32.png" />
@@ -38,6 +37,7 @@ export default class MyDocument extends Document {
             href='https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&display=swap'
             rel='stylesheet'
           />
+          
           {(this.props as any).emotionStyleTags}
         </Head>
         <body>

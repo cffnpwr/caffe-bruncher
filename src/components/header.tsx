@@ -2,6 +2,7 @@ import {
   AccountCircle,
   Close,
   GitHub,
+  Info,
   Settings,
   Translate,
 } from '@mui/icons-material';
@@ -13,6 +14,7 @@ import {
   Divider,
   FormControl,
   IconButton,
+  Link,
   List,
   ListItem,
   ListItemAvatar,
@@ -121,7 +123,7 @@ const CaffeBruncherHeader = () => {
           >
             <Box sx={{ display: 'flex', alignItems: 'center' }}>
               <AccountCircle sx={{ mr: 1 }} />
-              <Typography variant='overline'>
+              <Typography variant='body1'>
                 {localeObj.settings.accounts.title}
               </Typography>
             </Box>
@@ -195,7 +197,7 @@ const CaffeBruncherHeader = () => {
         >
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
             <Translate sx={{ mr: 1 }} />
-            <Typography variant='overline'>
+            <Typography variant='body1'>
               {localeObj.settings.language.title}
             </Typography>
           </Box>
@@ -209,6 +211,19 @@ const CaffeBruncherHeader = () => {
               ))}
             </Select>
           </FormControl>
+        </Box>
+
+        <Box
+          sx={{
+            p: 2,
+          }}
+        >
+          <Box sx={{ display: 'flex', alignItems: 'center' }}>
+            <Info sx={{ mr: 1 }} />
+            <Link href='/about' underline='hover' color='secondary'>
+              {localeObj.settings.about.title}
+            </Link>
+          </Box>
         </Box>
       </SwipeableDrawer>
     </>
