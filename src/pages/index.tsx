@@ -1,4 +1,4 @@
-import { Box, Container, Paper } from '@mui/material';
+import { Box, Container, Paper, Typography } from '@mui/material';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
@@ -54,6 +54,15 @@ const Home = () => {
           <Paper sx={{ px: { xs: 2, md: 5 }, py: 2.5 }}>
             <PostForm />
           </Paper>
+          <Typography
+            variant='body1'
+            align='center'
+            sx={{
+              py: 4,
+            }}
+          >
+          © 2022 CaffeinePower
+          </Typography>
         </Container>
       </Box>
       <CheckLogin />

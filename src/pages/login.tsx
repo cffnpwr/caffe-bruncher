@@ -1,4 +1,4 @@
-import { Box, Grid, Paper } from '@mui/material';
+import { Box, Grid, Paper, Typography } from '@mui/material';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
@@ -62,6 +62,15 @@ const Login = () => {
               <Paper>
                 <MisskeyLogin />
               </Paper>
+              <Typography
+                variant='body1'
+                align='center'
+                sx={{
+                  py: 4,
+                }}
+              >
+                © 2022 CaffeinePower
+              </Typography>
             </Grid>
           </Grid>
         </Box>
