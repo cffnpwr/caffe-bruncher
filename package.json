@@ -2,6 +2,11 @@
   "name": "caffe-bruncher",
   "version": "0.1.0",
   "private": true,
+  "browserslist": [
+    "> 0.2%, not dead",
+    "not IE 11",
+    "Safari > 11, iOS > 11"
+  ],
   "scripts": {
     "dev": "next dev",
     "build": "next build",
