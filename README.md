@@ -1,14 +1,11 @@
 # CaffeBruncher
 
 ![license](https://img.shields.io/github/license/cffnpwr/caffe-bruncher)
+[![development deploy](https://github.com/cffnpwr/caffe-bruncher/actions/workflows/devDeploy.yml/badge.svg?branch=master)](https://github.com/cffnpwr/caffe-bruncher/actions/workflows/releaseDeploy.yml)
 
 CaffeBruncherはTwitterとMisskeyに同時投稿を行なうツールです
 
 Tools to post to Twitter and Misskey at the same time.
-
-***これはまだ開発段階です***
-
-***This is still in the development stage.***
 
 ## 必要要件
 
