@@ -64,16 +64,16 @@ const Login = () => {
               </Paper>
             </Grid>
           </Grid>
-          <Typography
-            variant='body1'
-            align='center'
-            sx={{
-              py: 4,
-            }}
-          >
-                © 2022 CaffeinePower
-          </Typography>
         </Box>
+        <Typography
+          variant='body1'
+          align='center'
+          sx={{
+            py: 4,
+          }}
+        >
+          © 2022 CaffeinePower
+        </Typography>
       </Box>
       <CheckLogin />
     </>
