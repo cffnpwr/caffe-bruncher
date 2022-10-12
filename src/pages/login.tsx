@@ -62,18 +62,18 @@ const Login = () => {
               <Paper>
                 <MisskeyLogin />
               </Paper>
-              <Typography
-                variant='body1'
-                align='center'
-                sx={{
-                  py: 4,
-                }}
-              >
-                © 2022 CaffeinePower
-              </Typography>
             </Grid>
           </Grid>
         </Box>
+        <Typography
+          variant='body1'
+          align='center'
+          sx={{
+            py: 4,
+          }}
+        >
+          © 2022 CaffeinePower
+        </Typography>
       </Box>
       <CheckLogin />
     </>
