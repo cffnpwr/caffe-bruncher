@@ -1,11 +1,11 @@
+import cjp from './cjp';
 import en from './en';
 import ja from './ja';
-import jaSus from './ja-sus';
 import ko from './ko';
 
 export default {
   en: en,
   ja: ja,
-  'ja-sus': jaSus,
+  cjp: cjp,
   ko: ko,
 } as Locales;
