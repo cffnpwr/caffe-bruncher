@@ -227,7 +227,7 @@ const PostForm = () => {
       delete content.cw;
     }
 
-    if (useCjp && locale === 'ja-sus') {
+    if (useCjp && locale === 'cjp') {
       content.text = generate(content.text);
 
       if (useCW) content.cw = generate(content.cw);
@@ -368,7 +368,7 @@ const PostForm = () => {
             </Grid>
             <Grid item xs={4} sx={{ textAlign: 'end', height: 'fit-content' }}>
               {countGraphemeForTwitter(
-                useCjp && locale === 'ja-sus'
+                useCjp && locale === 'cjp'
                   ? generate(postingContent.text)
                   : postingContent.text,
               )}
@@ -389,7 +389,7 @@ const PostForm = () => {
             </Grid>
             <Grid item xs={4} sx={{ textAlign: 'end', height: 'fit-content' }}>
               {countGrapheme(
-                useCjp && locale === 'ja-sus'
+                useCjp && locale === 'cjp'
                   ? generate(postingContent.text)
                   : postingContent.text,
               )}
@@ -708,7 +708,7 @@ const PostForm = () => {
             </IconButton>
           </Tooltip>
         </Box>
-        {locale === 'ja-sus' ? (
+        {locale === 'cjp' ? (
           <FormControlLabel
             control={
               <Switch checked={useCjp} onChange={() => setUseCjp(!useCjp)} />
