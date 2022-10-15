@@ -204,8 +204,8 @@ const CaffeBruncherHeader = () => {
 
           <FormControl fullWidth sx={{ my: 2 }}>
             <Select value={locale} onChange={onChangeLanguage}>
-              {Object.keys(locales).map((locale, index) => (
-                <MenuItem key={index} value={locale}>
+              {Object.keys(locales).map(locale => (
+                <MenuItem key={locale} value={locale}>
                   {locales[locale].language}
                 </MenuItem>
               ))}

@@ -536,11 +536,11 @@ const PostForm = () => {
       </Box>
       <Box sx={{ display: 'flex' }}>
         {previewImages.map((image, index) => (
-          <Box key={index}>
+          <Box key={image.URL}>
             <Image
               src={image.URL}
               id={index.toString()}
-              key={index}
+              key={image.URL}
               width='48px'
               height='48px'
               objectFit='contain'

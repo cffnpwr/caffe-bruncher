@@ -100,8 +100,8 @@ const About = ({ specialThanks }: { specialThanks: SpecialThank[] }) => {
             {localeObj.about.st.debuggers}
           </Typography>
           <ul>
-            {specialThanks.map((st, index) => (
-              <li key={index}>
+            {specialThanks.map(st => (
+              <li key={st.name}>
                 <Box 
                   sx={{
                     display: 'flex',
