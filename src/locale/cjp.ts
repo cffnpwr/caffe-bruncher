@@ -70,6 +70,7 @@ export default {
     },
     st: {
       debuggers: '人柱ゐ皆様',
+      translators: '翻訳者',
     },
     links: {
       title: '刂ソケ',

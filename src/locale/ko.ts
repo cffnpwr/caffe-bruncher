@@ -70,6 +70,7 @@ export default {
     },
     st: {
       debuggers: '디버깅',
+      translators: '번역자',
     },
     links: {
       title: '관련 링크',

@@ -70,6 +70,7 @@ interface Locale {
     };
     st: {
       debuggers: string;
+      translators: string;
     };
     links: {
       title: string;

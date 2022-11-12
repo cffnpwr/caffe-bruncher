@@ -70,6 +70,7 @@ export default {
     },
     st: {
       debuggers: 'Debuggers',
+      translators: 'Translators',
     },
     links: {
       title: 'Links',

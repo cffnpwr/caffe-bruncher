@@ -9,7 +9,7 @@ import locales from '../locale';
 import { localeState } from '../stores/locale';
 
 
-const About = ({ specialThanks }: { specialThanks: SpecialThank[] }) => {
+const About = ({ specialThanks }: { specialThanks: SpecialThanks }) => {
   const locale = useRecoilValue(localeState);
   const localeObj = locales[locale];
   
@@ -100,8 +100,42 @@ const About = ({ specialThanks }: { specialThanks: SpecialThank[] }) => {
             {localeObj.about.st.debuggers}
           </Typography>
           <ul>
-            {specialThanks.map(st => (
-              <li key={st.name}>
+            {specialThanks.debuggers.map(st => (
+              <li key={'debugger' + st.name}>
+                <Box 
+                  sx={{
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    width: '15rem',
+                  }}
+                >
+                  {st.name + ' '}
+                  <Box>
+                    <Link href={st.twitter} underline='hover' color='secondary'>
+                      Twitter
+                    </Link>
+                    {' / '}
+                    <Link href={st.misskey} underline='hover' color='secondary'>
+                      Misskey
+                    </Link>
+                  </Box>
+                </Box>
+              </li>
+            ))}
+          </ul>
+          <Typography
+            variant='body1'
+            sx={{
+              p: 2,
+              pb: 0,
+              fontSize: '1rem',
+            }}
+          >
+            {localeObj.about.st.translators}
+          </Typography>
+          <ul>
+            {specialThanks.translators.map(st => (
+              <li key={'translators' + st.name}>
                 <Box 
                   sx={{
                     display: 'flex',
@@ -140,6 +174,7 @@ const About = ({ specialThanks }: { specialThanks: SpecialThank[] }) => {
                   display: 'flex',
                   justifyContent: 'space-between',
                   width: '25rem',
+                  flexDirection: { xs: 'column', sm: 'row' },
                 }}
               >
                 {localeObj.about.links.developer}
