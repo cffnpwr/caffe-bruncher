@@ -7,6 +7,7 @@ import {
   Translate,
 } from '@mui/icons-material';
 import {
+  Alert,
   AppBar,
   Avatar,
   Box,
@@ -70,6 +71,7 @@ const CaffeBruncherHeader = () => {
         position='absolute'
       >
         <Toolbar sx={{ justifyContent: 'end' }}>
+          {process.env.NODE_ENV === 'development' ? <Alert severity='warning' sx={{ mx: '2em', px: '2em' }}>{localeObj.info.devMsg}</Alert> : ''}
           <Tooltip title={localeObj.tooltip.github}>
             <IconButton
               href='https://github.com/cffnpwr/caffe-bruncher'

@@ -12,6 +12,9 @@ export default {
       title: 'CaffeBruncher에 대하여',
     },
   },
+  info: {
+    devMsg: '이것은 개발 버전입니다',
+  },
   tooltip: {
     github: 'Github 저장소',
     settings: '설정',

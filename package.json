@@ -1,6 +1,6 @@
 {
   "name": "caffe-bruncher",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "private": true,
   "browserslist": [
     "> 0.2%, not dead",

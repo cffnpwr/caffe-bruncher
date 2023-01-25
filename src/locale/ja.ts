@@ -12,6 +12,9 @@ export default {
       title: 'CaffeBruncherについて',
     },
   },
+  info: {
+    devMsg: 'これは開発版です',
+  },
   tooltip: {
     github: 'Github リポジトリ',
     settings: '設定',
