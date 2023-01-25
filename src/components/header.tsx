@@ -63,6 +63,8 @@ const CaffeBruncherHeader = () => {
     setLocale(event.target.value as string);
   };
 
+  console.debug(process.env.NEXT_PUBLIC_IS_PREVIEW);
+
   return (
     <>
       <AppBar
@@ -71,7 +73,7 @@ const CaffeBruncherHeader = () => {
         position='absolute'
       >
         <Toolbar sx={{ justifyContent: 'end' }}>
-          {process.env.NODE_ENV === 'development' ? <Alert severity='warning' sx={{ mx: '2em', px: '2em' }}>{localeObj.info.devMsg}</Alert> : ''}
+          {process.env.NODE_ENV === 'development' || process.env.NEXT_PUBLIC_IS_PREVIEW === 'true' ? <Alert severity='warning' sx={{ mx: '2em', px: '2em' }}>{localeObj.info.devMsg}</Alert> : ''}
           <Tooltip title={localeObj.tooltip.github}>
             <IconButton
               href='https://github.com/cffnpwr/caffe-bruncher'
