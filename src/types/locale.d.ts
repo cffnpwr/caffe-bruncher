@@ -12,6 +12,9 @@ interface Locale {
       title: stirng;
     };
   };
+  info: {
+    devMsg: string;
+  };
   tooltip: {
     github: string;
     settings: string;

@@ -12,6 +12,9 @@ export default {
       title: 'About CaffeBruncher',
     },
   },
+  info: {
+    devMsg: 'This is development version',
+  },
   tooltip: {
     github: 'Github repository',
     settings: 'Settings',

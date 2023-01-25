@@ -127,7 +127,7 @@ const PostForm = () => {
   const onKeyDown = async (
     event: React.KeyboardEvent<HTMLDivElement>,
   ): Promise<void> => {
-    if (event.key == 'Enter' && event.ctrlKey) await submit();
+    if (event.key == 'Enter' && (+event.ctrlKey ^ +event.metaKey)) await submit();
   };
 
   const toggleCW = () => {
@@ -155,10 +155,10 @@ const PostForm = () => {
   const addFiles = async (files: FileList) => {
     const previewURLs = [...previewImages];
     for (const file of files)
-      if (previewURLs.length < 16 && 
-        (file.type === 'image/jpeg' || 
-        file.type === 'image/png' || 
-        file.type === 'image/gif' || 
+      if (previewURLs.length < 16 &&
+        (file.type === 'image/jpeg' ||
+        file.type === 'image/png' ||
+        file.type === 'image/gif' ||
         file.type === 'image/webp')){
         const compressed = file.size >= 5e6 ? await imageCompression(file, { maxSizeMB: 5 }) : file;
         previewURLs.push({ file: compressed, URL: URL.createObjectURL(compressed) });
