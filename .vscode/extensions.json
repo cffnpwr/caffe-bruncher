@@ -1,9 +1,9 @@
 {
-    "recommendations": [
-        "styled-components.vscode-styled-components",
-        "dsznajder.es7-react-js-snippets",
-        "foxundermoon.next-js",
-        "pulkitgangwar.nextjs-snippets",
-        "vscodeshift.mui-snippets"
-    ]
+  "recommendations": [
+    "styled-components.vscode-styled-components",
+    "dsznajder.es7-react-js-snippets",
+    "foxundermoon.next-js",
+    "pulkitgangwar.nextjs-snippets",
+    "vscodeshift.mui-snippets"
+  ]
 }

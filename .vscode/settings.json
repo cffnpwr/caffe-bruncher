@@ -1,23 +1,20 @@
 {
-    "typescript.updateImportsOnFileMove.enabled": "always",
-    "[typescript]": {
-        "editor.defaultFormatter": "vscode.typescript-language-features",
-        "editor.tabSize": 2,
-        "editor.insertSpaces": true,
-        "editor.codeActionsOnSave": {
-            "source.fixAll.eslint": true,
-        },
-        "editor.formatOnSave": false
-    },
-    "typescript.format.semicolons": "insert",
-    "javascript.format.semicolons": "insert",
-    "[typescriptreact]": {
-        "editor.defaultFormatter": "vscode.typescript-language-features",
-        "editor.tabSize": 2,
-        "editor.insertSpaces": true,
-        "editor.codeActionsOnSave": {
-            "source.fixAll.eslint": true,
-        },
-        "editor.formatOnSave": false
-    },
+  "typescript.updateImportsOnFileMove.enabled": "always",
+  "[typescript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.tabSize": 2,
+    "editor.insertSpaces": true,
+    "editor.formatOnSave": true
+  },
+  "typescript.format.semicolons": "insert",
+  "javascript.format.semicolons": "insert",
+  "[typescriptreact]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.tabSize": 2,
+    "editor.insertSpaces": true,
+    "editor.formatOnSave": true
+  },
+  "typescript.tsdk": "node_modules/.pnpm/typescript@5.0.3/node_modules/typescript/lib",
+  "typescript.enablePromptUseWorkspaceTsdk": true,
+  "eslint.codeActionsOnSave.mode": "problems"
 }

@@ -1,7 +1,7 @@
 # CaffeBruncher
 
 ![license](https://img.shields.io/github/license/cffnpwr/caffe-bruncher)
-[![release deploy](https://github.com/cffnpwr/caffe-bruncher/actions/workflows/releaseDeploy.yml/badge.svg?branch=master)](https://github.com/cffnpwr/caffe-bruncher/actions/workflows/releaseDeploy.yml)
+[![release deploy](https://github.com/cffnpwr/caffe-bruncher/actions/workflows/release_and_deploy.yaml/badge.svg?branch=master)](https://github.com/cffnpwr/caffe-bruncher/actions/workflows/release_and_deploy.yaml)
 
 CaffeBruncherはTwitterとMisskeyに同時投稿を行なうツールです。
 
@@ -9,8 +9,8 @@ Tools to post to Twitter and Misskey at the same time.
 
 ## 必要要件
 
- - [Node.js](https://nodejs.org) latest
- - [Yarn](https://yarnpkg.com/)
+ - [Node.js](https://nodejs.org) v18
+ - [pnpm](https://pnpm.io) v7
 
 ## 環境構築
 
@@ -19,7 +19,7 @@ Tools to post to Twitter and Misskey at the same time.
 ```sh
 git clone https://github.com/cffnpwr/caffe-bruncher-frontend.git
 cd caffe-bruncher-frontend
-yarn install
+pnpm install
 ```
 
 ## 使い方
@@ -38,7 +38,7 @@ MK_CALLBACK=http://localhost:3000/misskey_callback
 以下のコマンドを実行します
 
 ```sh
-yarn dev
+pnpm run dev
 ```
 
 ### ビルド
@@ -55,9 +55,5 @@ MK_CALLBACK=[your server's URL]/misskey_callback       # e.g. https://hogehoge.c
 以下のコマンドを実行します
 
 ```sh
-yarn build
+pnpm run build
 ```
-
-## その他
-
-開発は`development`ブランチで行なわれています

@@ -7,7 +7,9 @@
     "eslint:recommended",
     "plugin:react/recommended",
     "plugin:@typescript-eslint/recommended",
-    "next/core-web-vitals"
+    "next/core-web-vitals",
+    "plugin:tailwindcss/recommended",
+    "prettier"
   ],
   "overrides": [],
   "parser": "@typescript-eslint/parser",
@@ -15,11 +17,7 @@
     "ecmaVersion": "latest",
     "sourceType": "module"
   },
-  "plugins": [
-    "react",
-    "@typescript-eslint",
-    "unused-imports"
-  ],
+  "plugins": ["react", "@typescript-eslint", "unused-imports", "tailwindcss", "prettier"],
   "rules": {
     "indent": [
       "error",
@@ -28,26 +26,11 @@
         "SwitchCase": 1
       }
     ],
-    "linebreak-style": [
-      "error",
-      "unix"
-    ],
-    "quotes": [
-      "error",
-      "single"
-    ],
-    "semi": [
-      "error",
-      "always"
-    ],
-    "comma-dangle": [
-      "error",
-      "always-multiline"
-    ],
-    "object-curly-spacing": [
-      "error",
-      "always"
-    ],
+    "linebreak-style": ["error", "unix"],
+    "quotes": ["error", "double"],
+    "semi": ["error", "always"],
+    "comma-dangle": ["error", "always-multiline"],
+    "object-curly-spacing": ["error", "always"],
     "sort-imports": [
       "error",
       {
@@ -67,24 +50,21 @@
           "builtin", // 組み込みモジュール
           "external", // npmでインストールした外部ライブラリ
           "internal", // 自作モジュール
-          [
-            "parent",
-            "sibling"
-          ],
+          ["parent", "sibling"],
           "object",
           "type",
           "index"
         ],
         "newlines-between": "always", // グループ毎にで改行を入れる
-        "pathGroupsExcludedImportTypes": [
-          "builtin"
-        ],
+        "pathGroupsExcludedImportTypes": ["builtin"],
         "alphabetize": {
           "order": "asc", // 昇順にソート
-          "caseInsensitive": true // 小文字大文字を区別する 
+          "caseInsensitive": true // 小文字大文字を区別する
         }
       }
     ],
-    "unused-imports/no-unused-imports": "error"
+    "unused-imports/no-unused-imports": "error",
+    "@next/next/no-head-element": "off",
+    "prettier/prettier": "error"
   }
 }
